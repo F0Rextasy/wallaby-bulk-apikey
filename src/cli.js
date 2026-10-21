@@ -51,9 +51,14 @@ const TEMPTF = 'https://temp.tf';
 const MODEL_DEFAULT = 'kimi-k3';
 const PROMPT = 'Reply with the single word: ok';
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36';
-const BLOCKED = /just a moment|attention required|checking your browser/i;
-/** The SPA is healthy when it is really the panel page, not a challenge or an error. */
-const HEALTHY = `location.hostname === '${API_HOST}' && !/just a moment|attention required|checking your browser/i.test(document.title) && !/ERR_|No internet|took too long/i.test(document.body ? document.body.innerText : '')`;
+/**
+ * The panel SPA is up when its root element has children. Challenge and error
+ * pages have none, and Cloudflare localises the interstitial («Bir dakika
+ * lütfen…» was measured on a `tr` Chrome), so the SPA itself is the only
+ * language-independent signal that the wall is down.
+ */
+const SPA_READY = "!!document.querySelector('#root') && document.querySelector('#root').children.length > 0";
+const HEALTHY = `location.hostname === '${API_HOST}' && ${SPA_READY} && !/ERR_|No internet|took too long/i.test(document.body ? document.body.innerText : '')`;
 
 // ------------------------------------------------------------------- options
 const argv = process.argv.slice(2);
@@ -192,6 +197,9 @@ async function launchChrome(exit, port) {
     '--no-first-run', '--no-default-browser-check', '--disable-popup-blocking',
     '--disable-features=Translate,BackForwardCache,OptimizationHints',
     '--window-size=1280,900', '--window-position=40,40',
+    // CF localises its interstitial to the browser language (a Turkish title
+    // «Bir dakika lütfen…» tripped the wall detector on 2026-10-21): pin it.
+    '--lang=en-US',
   ];
   const px = chromeProxy(exit);
   if (px) args.push(`--proxy-server=${px}`);
@@ -378,23 +386,23 @@ async function piercedFrames(cdp) {
   return out;
 }
 
-/** Click the interstitial's widget until the real page title appears. */
+/** Click the interstitial's widget until the panel SPA is actually up. */
 async function ensureClear(cdp, page, { rounds = 14 } = {}) {
+  const ready = () => page.eval(SPA_READY).then((v) => v === true).catch(() => false);
   let title = await page.title().catch(() => '');
-  if (!BLOCKED.test(String(title))) return { cleared: true, rounds: 0, title };
+  if (await ready()) return { cleared: true, rounds: 0, title };
   for (let n = 1; n <= rounds; n++) {
     const boxes = (await piercedFrames(cdp).catch(() => []))
       .filter((f) => f.box && f.box.w > 20 && f.box.h > 15 && f.box.w < 700 && f.box.h < 300);
-    log(`  [cf] round ${n}/${rounds} clickable=${boxes.length}`);
+    log(`  [cf] round ${n}/${rounds} clickable=${boxes.length} «${String(title).slice(0, 40)}»`);
     for (const b of boxes) {
       await page.mouseClick(b.box.x + Math.round(b.box.w * 0.14), b.box.y + Math.round(b.box.h / 2));
       await sleep(2500);
-      title = await page.title().catch(() => '');
-      if (!BLOCKED.test(String(title))) return { cleared: true, rounds: n, title };
+      if (await ready()) return { cleared: true, rounds: n, title: await page.title().catch(() => '') };
     }
     await sleep(2000);
+    if (await ready()) return { cleared: true, rounds: n, title: await page.title().catch(() => '') };
     title = await page.title().catch(() => '');
-    if (!BLOCKED.test(String(title))) return { cleared: true, rounds: n, title };
   }
   return { cleared: false, rounds, title };
 }

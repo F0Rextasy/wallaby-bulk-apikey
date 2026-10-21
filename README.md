@@ -112,21 +112,22 @@ The launcher asks for the proxy list (optional — without one the CLI runs dire
 
 ## ✅ Verified working — every key is tested
 
-Every check below ran on **2026-10-21** over fresh public exits (no VPN in the loop): the mint flow was driven by the same code this package ships (`src/cli.js`), and the key table below was re-proved by **`node src/cli.js --verify-only`**.
+Every check below ran on **2026-10-21** over fresh public exits (no VPN in the loop). The mint flow was driven by the lab's pinned driver for the first ten keys and by **this package's own CLI end to end for key #11** (`node src/cli.js --count 1` → `done: 1/1 keys minted`), and the whole file was re-proved by **`node src/cli.js --verify-only`**.
 
 | Check | Result |
 | --- | --- |
-| `/register` interstitial in a **headful** Chrome | **cleared** — 2–12 click rounds on every account that got through |
+| `/register` interstitial in a **headful** Chrome | **cleared** — 2–14 click rounds, on every exit that made it through |
 | headless control on those exits | **0/9 clears** at the same hour — this is why the flag is off by default |
+| localised challenge | CF serves the interstitial in the browser's language («Bir dakika lütfen…» on a `tr` Chrome, measured 2026-10-21) → the detector tests the **panel SPA root**, not the title, and Chrome is pinned to `--lang=en-US` |
 | mailed code | **~15–25 s** from `support@<panel-mail>` («Wallaby邮箱验证邮件»), 6-character code, valid 10 minutes |
 | `POST /api/user/register?turnstile=` | **200** with `data.access_token` (JWT); a token in the body alone answers `Turnstile token 为空` |
 | console session | **Bearer JWT** — `/api/user/self` 401s without it, 200 with it (`quota = 250000`) |
 | key route | `POST /api/token/` 200 (no key in the body) → list returns it **masked** → `POST /api/token/<id>/key` returns the 48-char plaintext |
 | `GET /v1/models` per key | **200** — `kimi-k3`, `moonshotai/kimi-k3` |
-| `POST /v1/chat/completions` per key | **200** with `content \|\| reasoning_content` — **10/10 keys LIVE** |
+| `POST /v1/chat/completions` per key | **200** with `content \|\| reasoning_content` — **11/11 keys LIVE** |
 | signup credit | `quota = 250000` = **$0.50**, no card/phone/invite |
 | rate limit | 30-call burst **28×200**, 2 proxy failures, **0×429** |
-| throughput | **~2–2.5 min per account**, serial, one browser per attempt |
+| throughput | **~2–2.5 min per account** on a good exit; a bad exit is skipped, worst case ~5 min |
 
 ## 🧭 How it works
 

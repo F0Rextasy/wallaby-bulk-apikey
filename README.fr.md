@@ -20,7 +20,7 @@
 [![9Router](https://img.shields.io/badge/9Router-connector-8B5CF6?style=for-the-badge)](#-connect-to-9router)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Démarrage rapide](#-quick-start) · [🎁 Offre gratuite](#-free-tier--how-much-you-get) · [🤖 Modèles](#-models--all-2-of-them) · [🧪 Utiliser l'API](#-how-to-use-the-api) · [✅ Vérifié](#-verified-working--every-key-is-tested) · [🧭 Comment ça marche](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Options](#️-cli-options) · [🛰️ Proxys](#️-behind-a-proxy) · [🐞 Problèmes](#-issues)
+[🛠 Démarrage rapide](#-quick-start) · [🎁 Niveau gratuit](#-free-tier--how-much-you-get) · [🤖 Modèles](#-models--all-2-of-them) · [🧪 Utiliser l'API](#-how-to-use-the-api) · [✅ Vérifié](#-verified-working--every-key-is-tested) · [🧭 Comment ça marche](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Options](#️-cli-options) · [🛰️ Proxys](#️-behind-a-proxy) · [🐞 Problèmes](#-issues)
 
 </div>
 
@@ -34,23 +34,23 @@
 
 ## ✨ Pourquoi cet outil existe
 
-Wallaby (wallabytoken.com) est une couche d'inférence basée à Sydney qui revend des modèles ouverts de pointe sur un solde prépayé en USD, et **chaque nouveau compte démarre avec 0,50 $ de crédit d'essai gratuit** — sans carte, sans téléphone, sans recharge. Aujourd'hui, le catalogue se résume à un seul modèle, **`kimi-k3`** (contexte de 1M, raisonnement toujours actif), facturé à **2,70 $ en entrée / 13,50 $ en sortie par 1M de tokens** (0,27 $ en cache) — soit 10 % en dessous du tarif officiel Kimi.
+Wallaby (wallabytoken.com) est une couche d'inférence basée à Sydney qui revend des modèles ouverts de pointe en USD prépayés, et **chaque nouveau compte commence avec 0,50 $ de crédit d'essai gratuit** — sans carte, sans téléphone, sans recharge. Aujourd'hui, le catalogue se résume à un seul modèle, **`kimi-k3`** (contexte de 1 M, raisonnement toujours actif), facturé à **2,70 $ en entrée / 13,50 $ en sortie par million de tokens** (0,27 $ en cache) — soit 10 % sous le tarif officiel de Kimi.
 
 Le panneau est un fork de New API derrière **Cloudflare**, et Cloudflare constitue toute la difficulté : `/register` répond par un défi géré, et `POST /api/verification` ainsi que `POST /api/user/register` sont également soumis au défi — aucune clé n'existe donc sans un navigateur qui détient `cf_clearance`. Pire encore, le défi n'est franchi que par un navigateur **visible** : mesuré sur les mêmes sorties à la même heure, le mode headless a franchi **0/9** et le mode headful **3/3**. C'est pourquoi cet outil pilote un vrai Chrome headful (le README le répète, car une exécution headless ressemble exactement à un panneau cassé) et pourquoi un compte coûte quelques minutes plutôt qu'une seconde.
 
-## 🎁 Offre gratuite — ce que vous obtenez
+## 🎁 Niveau gratuit — ce que vous obtenez
 
 | Quoi | Valeur |
 | --- | --- |
 | Crédit d'inscription | **0,50 $** — relu depuis la console sous la forme `quota = 250000` (`quota_per_unit = 500000`, USD 1:1) |
-| Carte / téléphone | **aucun des deux** — adresse e-mail + mot de passe + un code envoyé par e-mail + une vérification humaine |
-| Expiration | **jamais** (« no card · no top-up · never expires ») |
-| Modèles sur l'offre gratuite | **`kimi-k3`** (+ alias `moonshotai/kimi-k3`) ; DeepSeek V4 Flash/Pro sont listés comme temporairement indisponibles |
-| Prix | 2,70 $ en entrée / 13,50 $ en sortie / 0,27 $ en cache par 1M (tarif officiel Kimi **−10 %**) |
+| Carte / téléphone | **ni l'un ni l'autre** — adresse e-mail + mot de passe + un code envoyé par e-mail + une vérification humaine |
+| Expiration | **jamais** (« pas de carte · pas de recharge · n'expire jamais ») |
+| Modèles du niveau gratuit | **`kimi-k3`** (+ alias `moonshotai/kimi-k3`) ; DeepSeek V4 Flash/Pro sont indiqués comme temporairement indisponibles |
+| Prix | 2,70 $ en entrée / 13,50 $ en sortie / 0,27 $ en cache par million (tarif officiel Kimi **−10 %**) |
 | Limite de débit | **aucune observée** — une rafale de 30 appels a répondu 28×200 sans aucun 429 (les deux autres étaient des échecs de proxy) |
-| L'unité qui se cumule | **un compte = une clé** ; le crédit est rattaché au compte, donc 10 clés = 10 × 0,50 $ |
+| L'unité qui évolue | **un compte = une clé** ; le crédit est rattaché au compte, donc 10 clés = 10 × 0,50 $ |
 
-> 💡 L'offre gratuite est définie par Wallaby et peut changer. Consultez les chiffres en direct sur [wallabytoken.com](https://wallabytoken.com) — et laissez le propre contrôle de l'outil trancher :
+> 💡 Le niveau gratuit est défini par Wallaby et peut changer. Consultez les chiffres en direct sur [wallabytoken.com](https://wallabytoken.com) — et laissez le propre contrôle de l'outil en décider :
 
 ```bash
 ```bash
@@ -72,10 +72,10 @@ curl https://api.wallabytoken.com/v1/chat/completions \
 
 | ID du modèle | Remarque |
 | --- | --- |
-| `kimi-k3` | le modèle pour lequel ce fournisseur existe — contexte de 1M, raisonnement à poids ouverts, la réflexion facturée comme sortie |
+| `kimi-k3` | le modèle pour lequel ce fournisseur existe — contexte de 1 M, raisonnement à poids ouverts, la réflexion facturée comme sortie |
 | `moonshotai/kimi-k3` | le même modèle sous son id amont |
 
-Les réponses nomment la pile de service plutôt que l'alias — `"model": "FW-Kimi-K3"` et `"model": "accounts/fireworks/models/kimi-k3"` — donc le backend est Fireworks. Le fournisseur publie une liste de prix lisible par machine à l'adresse [wallabytoken.com/pricing.json](https://wallabytoken.com/pricing.json).
+Les réponses nomment la pile de service plutôt que l'alias — `"model": "FW-Kimi-K3"` et `"model": "accounts/fireworks/models/kimi-k3"` — le backend est donc Fireworks. Le fournisseur publie une liste de prix lisible par machine sur [wallabytoken.com/pricing.json](https://wallabytoken.com/pricing.json).
 
 ## 🧪 Comment utiliser l'API
 
@@ -90,7 +90,7 @@ print(c.chat.completions.create(model="kimi-k3",
       messages=[{"role":"user","content":"gday"}]).choices[0].message.reasoning_content)
 ```
 
-La documentation du site promet l'absence de plafond de débit sur l'offre gratuite ; la mesure le confirme (30 appels rapides, zéro 429, latences de 2 à 36 s avec une queue en amont).
+La documentation du site promet l'absence de plafond de débit sur le niveau gratuit ; la mesure le confirme (30 appels rapides, zéro 429, latences de 2 à 36 s avec une queue en amont).
 
 ## 🛠 Démarrage rapide
 
@@ -102,7 +102,7 @@ node src/cli.js --count 5 --pool proxies.txt # five accounts, one exit each
 node src/cli.js --verify-only                # re-prove every key already in keys.txt
 ```
 
-**Un navigateur visible (headful) est obligatoire** — l'interstitiel Cloudflare sur `/register` ne se franchit pas dans Chrome headless, et le défi protège également `POST /api/verification` et `POST /api/user/register`. C'est pourquoi l'option est *désactivée* : `--headless` n'existe que pour les expérimentations.
+**Un navigateur visible (headful) est obligatoire** — l'interstitiel de Cloudflare sur `/register` ne se franchit pas dans Chrome headless, et le défi protège aussi `POST /api/verification` et `POST /api/user/register`. C'est pourquoi l'option est *désactivée* : `--headless` n'existe que pour les expérimentations.
 
 Une clé n'est écrite dans `keys.txt` **qu'après** qu'un `GET /v1/models` et une vraie complétion ont répondu, et chaque compte (boîte mail, sortie, quota, clé, preuve) est ajouté à `accounts.json`.
 
@@ -112,21 +112,22 @@ Le lanceur demande la liste de proxys (facultative — sans elle, le CLI se conn
 
 ## ✅ Vérifié fonctionnel — chaque clé est testée
 
-Chaque vérification ci-dessous a été effectuée le **2026-10-21** via de nouvelles sorties publiques (aucun VPN dans la boucle) : le flux de création a été piloté par le même code que celui livré dans ce paquet (`src/cli.js`), et le tableau des clés ci-dessous a été revérifié par **`node src/cli.js --verify-only`**.
+Chaque vérification ci-dessous a été effectuée le **2026-10-21** via de nouvelles sorties publiques (aucun VPN dans la boucle). Le flux de création a été piloté par le driver épinglé du labo pour les dix premières clés et par **le CLI de ce paquet de bout en bout pour la clé n° 11** (`node src/cli.js --count 1` → `done: 1/1 keys minted`), et l'ensemble du fichier a été revérifié par **`node src/cli.js --verify-only`**.
 
 | Vérification | Résultat |
 | --- | --- |
-| Interstitiel `/register` dans un Chrome **headful** | **franchi** — 2 à 12 séries de clics sur chaque compte qui est passé |
-| Contrôle headless sur ces sorties | **0/9 franchis** à la même heure — c'est pourquoi l'option est désactivée par défaut |
-| Code envoyé par e-mail | **~15–25 s** depuis `support@<panel-mail>` («Wallaby邮箱验证邮件»), code de 6 caractères, valable 10 minutes |
+| Interstitiel `/register` dans un Chrome **headful** | **franchi** — 2 à 14 tours de clics, sur chaque sortie qui est passée |
+| Contrôle headless sur ces sorties | **0/9 franchissements** à la même heure — c'est pourquoi l'option est désactivée par défaut |
+| Défi localisé | CF sert l'interstitiel dans la langue du navigateur (« Bir dakika lütfen… » sur un Chrome `tr`, mesuré le 2026-10-21) → le détecteur teste la **racine SPA du panneau**, pas le titre, et Chrome est épinglé sur `--lang=en-US` |
+| Code envoyé par e-mail | **~15–25 s** depuis `support@<panel-mail>` (« Wallaby邮箱验证邮件 »), code de 6 caractères, valable 10 minutes |
 | `POST /api/user/register?turnstile=` | **200** avec `data.access_token` (JWT) ; un token dans le corps seul répond `Turnstile token 为空` |
 | Session console | **Bearer JWT** — `/api/user/self` renvoie 401 sans, 200 avec (`quota = 250000`) |
 | Route de clé | `POST /api/token/` 200 (aucune clé dans le corps) → la liste la renvoie **masquée** → `POST /api/token/<id>/key` renvoie le texte en clair de 48 caractères |
 | `GET /v1/models` par clé | **200** — `kimi-k3`, `moonshotai/kimi-k3` |
-| `POST /v1/chat/completions` par clé | **200** avec `content \|\| reasoning_content` — **10/10 clés ACTIVES** |
+| `POST /v1/chat/completions` par clé | **200** avec `content \|\| reasoning_content` — **11/11 clés ACTIVES** |
 | Crédit d'inscription | `quota = 250000` = **0,50 $**, sans carte/téléphone/invitation |
 | Limite de débit | Rafale de 30 appels **28×200**, 2 échecs de proxy, **0×429** |
-| Débit | **~2–2,5 min par compte**, en série, un navigateur par tentative |
+| Débit | **~2–2,5 min par compte** sur une bonne sortie ; une mauvaise sortie est ignorée, pire cas ~5 min |
 
 ## 🧭 Comment ça marche
 
@@ -141,12 +142,12 @@ inbox (one address per account)                                  a fresh address
 
 | Étape | Appel | Remarques |
 | --- | --- | --- |
-| boîte mail | alias temp.tf (alias plus `outlook`/`hotmail`) | une adresse par compte ; le panneau rejette 9 890 domaines jetables, et cette famille est une vraie boîte Microsoft |
-| interstitiel | `/register` dans un Chrome **headful** | le widget vit dans un shadow root fermé, donc le DOM est percé (`DOM.getDocument {pierce:true}`) et la case est cliquée avec de vrais événements souris ; 4 à 10 séries |
-| turnstile | le widget propre au panneau (`turnstile_sitekey` depuis `/api/status`) | lu nativement quand la page le résout (tokens de 773–794 caractères), sinon monté et cliqué au même rythme |
-| code | `GET /api/verification?email=&turnstile=` → code envoyé par e-mail | le token doit voyager dans la **chaîne de requête** ; dans le corps seul, la route répond `Turnstile token 为空` |
+| boîte mail | alias temp.tf (`outlook`/`hotmail` plus-alias) | une adresse par compte ; le panneau rejette 9 890 domaines jetables, et cette famille est une vraie boîte Microsoft |
+| interstitiel | `/register` dans un Chrome **headful** | le widget vit dans un shadow root fermé, donc le DOM est percé (`DOM.getDocument {pierce:true}`) et la case est cliquée avec de vrais événements souris ; 4 à 10 tours |
+| turnstile | le widget du panneau lui-même (`turnstile_sitekey` issu de `/api/status`) | lu nativement quand la page le résout (tokens de 773–794 caractères), sinon monté et cliqué au même rythme |
+| code | `GET /api/verification?email=&turnstile=` → code envoyé par e-mail | le token doit passer par la **chaîne de requête** ; dans le corps seul, la route répond `Turnstile token 为空` |
 | inscription | `POST /api/user/register?turnstile=` | envoie un code de 6 caractères (hexadécimal dans tous les échantillons, valable 10 minutes, livré en ~15–25 s depuis `support@<panel-mail>`) |
-| session | le JWT `data.access_token` issu de register/login | la console s'authentifie avec **Bearer**, pas avec des cookies : `/api/user/self` répond `401 invalid access token` sans l'en-tête |
+| session | le JWT `data.access_token` issu de register/login | la console est authentifiée avec **Bearer**, pas des cookies : `/api/user/self` répond `401 invalid access token` sans l'en-tête |
 | clé | `POST /api/token/` → `POST /api/token/<id>/key` | la création répond 200 **sans** clé et la liste la renvoie **masquée** (`zcMh**********UCAK`) ; le texte en clair ne vient que de la route `/key` |
 | preuve | `GET /v1/models` + `POST /v1/chat/completions` | directement depuis Node — le relais ne soumet pas `/v1/*` au défi ; `content || reasoning_content` compte |
 
@@ -165,9 +166,9 @@ node src/cli.js --help
 
 | Option | Défaut | Signification |
 | --- | --- | --- |
-| `--count N` | `1` | nombre de comptes à créer, un navigateur à la fois |
+| `--count N` | `1` | comptes à créer, un navigateur à la fois |
 | `--pool FILE` | `proxies.txt` s'il existe | une sortie par ligne (`http://`, `socks5://`) ; sans cela, l'exécution est directe |
-| `--proxy URL` | — | fixer une seule sortie |
+| `--proxy URL` | — | épingler une seule sortie |
 | `--exits K` | `8` | combien de sorties candidates un compte peut consumer avant d'être abandonné |
 | `--model ID` | `kimi-k3` | modèle utilisé pour le contrôle en direct |
 | `--port N` | auto | port Chrome DevTools |
@@ -177,11 +178,11 @@ node src/cli.js --help
 
 ## 🛰️ Derrière un proxy
 
-**Facultatif — recommandé à grande échelle.** Sans pool, le CLI le signale et se connecte directement ; l'inscription, la création de clés et la vérification sont identiques, seule l'origine des paquets change.
+**Facultatif — recommandé à grande échelle.** Sans pool, le CLI le signale et se connecte directement ; l'inscription, la création de clé et la vérification sont identiques, seule l'origine des paquets change.
 
 Avec un pool, chaque tentative obtient **son propre navigateur épinglé à cette sortie** (Chrome fixe son proxy au lancement), donc une sortie qui ne franchit pas l'interstitiel ne coûte que sa propre tentative et le CLI passe au candidat suivant. Les sorties qui fonctionnent sont celles dont la classe d'IP est tolérée par Cloudflare avec un navigateur visible ; les lignes mortes se manifestent par `page-unhealthy-after-clear` ou une page `chrome-error` et sont ignorées.
 
-Les proxys authentifiés ne sont pas pris en charge par la partie navigateur — utilisez des sorties avec liste blanche d'IP. Faites tourner la liste : la meilleure sortie d'une heure est souvent morte le lendemain (mesuré le 2026-10-21 : la sortie la plus fiable du jour a cessé de répondre en quelques heures).
+Les proxys authentifiés ne sont pas pris en charge par la partie navigateur — utilisez des sorties avec liste blanche d'IP. Faites tourner la liste : la meilleure sortie d'une heure est souvent morte la suivante (mesuré le 2026-10-21 : la sortie la plus fiable du jour a cessé de répondre en quelques heures).
 
 ## 📄 Fichiers
 
@@ -206,14 +207,14 @@ Défauts : `--prefix wallaby`, `--base-url https://api.wallabytoken.com/v1`, `--
 | | |
 | --- | --- |
 | 🏢 Fournisseur | **Wallaby** — [wallabytoken.com](https://wallabytoken.com) |
-| 🎁 Ce que le fournisseur offre | un compte par clé — 0,50 $ de crédit d'inscription, kimi-k3 vérifié par chat (un navigateur visible est obligatoire) |
-| 🔑 Ce qu'une clé vous apporte | une clé API limitée à son propre compte : les 2 ids de modèles sur le point de terminaison ci-dessous, dans les limites de votre offre. Le quota est rattaché au **compte**, c'est précisément pourquoi cet outil crée un compte par clé |
+| 🎁 Ce que le fournisseur donne | un compte par clé — 0,50 $ de crédit d'inscription, kimi-k3 vérifié par chat (un navigateur visible est obligatoire) |
+| 🔑 Ce qu'une clé vous apporte | une clé API limitée à son propre compte : les 2 ids de modèles sur le point de terminaison ci-dessous, dans les limites de votre forfait. Le quota est rattaché au **compte**, ce qui explique précisément pourquoi cet outil crée un compte par clé |
 | 🌐 Forme de l'API | Compatible OpenAI : `POST https://api.wallabytoken.com/v1/chat/completions` |
 | 🔒 Vos données | seuls wallabytoken.com et le backend de boîte mail que vous configurez sont contactés ; les clés restent sur votre machine |
 
 ## 🐞 Problèmes
 
-Si Wallaby modifie la forme de son inscription, sa sitekey Turnstile, la route de clé de la console ou le catalogue, l'outil s'arrête à cette étape et le signale. **[Ouvrez un ticket](../../issues)** avec la commande et la sortie exacte.
+Si Wallaby modifie la structure de son inscription, sa sitekey Turnstile, la route de clé de la console ou le catalogue, l'outil s'arrête à cette étape et le signale. **[Ouvrez un ticket](../../issues)** avec la commande et la sortie exacte.
 
 ## 📄 Licence
 

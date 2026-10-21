@@ -33,7 +33,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const UA = 'wallaby-bulk-9router-connector/1.0';
+const UA = 'wallaby-bulk-9router-connector/1.0'
 
 const DEFAULTS = {
   base: 'http://localhost:20128',
