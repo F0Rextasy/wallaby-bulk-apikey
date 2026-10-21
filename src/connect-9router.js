@@ -13,7 +13,7 @@
  * Usage:
  *   node src/connect-9router.js \
  *     --base http://localhost:20128 --password 123456 \
- *     --api-key 3I7ulkrQVXR1YL… (48-char, no sk- prefix) [--name "Wallaby"] [--prefix wallaby]
+ *     --api-key YOUR_KEY (48-char, no sk- prefix) [--name "Wallaby"] [--prefix wallaby]
  *
  *   node src/connect-9router.js                  # register every key in keys.txt
  *   node src/connect-9router.js --model <id>     # pin the connection's default model

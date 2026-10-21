@@ -59,7 +59,7 @@ node src/cli.js --verify-only
 
 # or by hand (keys carry no `sk-` prefix)
 curl https://api.wallabytoken.com/v1/chat/completions \
-  -H "Authorization: Bearer 3I7ulkrQVXR1YL…" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_KEY" -H "Content-Type: application/json" \
   -d '{"model":"kimi-k3","messages":[{"role":"user","content":"gday"}],"max_tokens":64}'
 ```
 
