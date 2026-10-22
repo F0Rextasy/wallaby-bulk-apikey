@@ -113,6 +113,11 @@ The launcher asks for the proxy list (optional — without one the CLI runs dire
 
 ## ✅ Verified working — every key is tested
 
+> **Quality gates.** Every key here passed a live `chat-200` before it was written to `keys.txt`
+> (dead keys are never shipped). Router combos follow the same rule at the model level: an entry is
+> added **only if the model answers `chat-200` and can call tools** — a model without tool support,
+> a dead key or a dead provider is dropped instead of added. Works with **9Router and OmniRoute**.
+
 Every check below ran on **2026-10-21** over fresh public exits (no VPN in the loop). The mint flow was driven by the lab's pinned driver for the first ten keys and by **this package's own CLI end to end for key #11**verified**`node src/cli.js --verify-only`**.
 
 | Check | Result |
@@ -202,7 +207,6 @@ node src/connect-9router.js --base http://localhost:20128 --password 123456
 ```
 
 Defaults: `--prefix wallaby`, `--base-url https://api.wallabytoken.com/v1`, `--model kimi-k3`. Models are served as `wallaby/kimi-k3`.
-
 
 ## 🔌 Connect to OmniRoute
 
