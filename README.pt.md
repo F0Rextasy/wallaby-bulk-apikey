@@ -54,6 +54,7 @@ O painel é um fork do New API atrás do **Cloudflare**, e o Cloudflare é toda 
 
 ```bash
 ```bash
+
 # every key in keys.txt: the model list plus one real completion
 node src/cli.js --verify-only
 

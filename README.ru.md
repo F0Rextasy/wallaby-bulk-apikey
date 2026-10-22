@@ -54,6 +54,7 @@ Wallaby (wallabytoken.com) — это работающий из Сиднея с�
 
 ```bash
 ```bash
+
 # каждый ключ в keys.txt: список моделей плюс одно реальное завершение
 node src/cli.js --verify-only
 

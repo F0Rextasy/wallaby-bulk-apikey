@@ -54,6 +54,7 @@ Wallaby(wallabytoken.com)는 시드니에서 운영되는 추론 레이어로, �
 
 ```bash
 ```bash
+
 # keys.txt의 모든 키: 모델 목록과 실제 완성 한 번
 node src/cli.js --verify-only
 

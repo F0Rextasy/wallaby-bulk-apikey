@@ -30,12 +30,6 @@
 
 </div>
 
-<div align="center">
-
-[English](README.md) · [Türkçe](README.tr.md) · [中文](README.cn.md) · **日本語** · [한국어](README.ko.md) · [Español](README.es.md) · [Français](README.fr.md) · [Deutsch](README.de.md) · [Русский](README.ru.md) · [Português](README.pt.md)
-
-</div>
-
 ---
 
 ## ✨ なぜこれが存在するのか
@@ -60,6 +54,7 @@ Wallaby (wallabytoken.com) はシドニーで運営されている推論レイ�
 
 ```bash
 ```bash
+
 # keys.txt内のすべてのキー：モデルリストと実際の補完1回
 node src/cli.js --verify-only
 
@@ -217,9 +212,11 @@ node src/connect-9router.js --base http://localhost:20128 --password 123456
 | 🔑 1つのキーで得られるもの | 自身のアカウントにスコープされた1つのAPIキー：以下のエンドポイントにある2つのモデルIDを、あなたのプランの制限で利用可能。クォータは**アカウント**に紐づくため、このツールが1キーにつき1アカウントを作成するのはまさにそのため |
 | 🌐 APIの形式 | OpenAI互換：`POST https://api.wallabytoken.com/v1/chat/completions` |
 | 🔒 あなたのデータ | 接触するのはwallabytoken.comと、あなたが設定したインボックスバックエンドのみ。キーはあなたのマシンに留まります |
+
 ## 🐞 問題報告
 
 Wallabyが登録の形式、Turnstileのsitekey、コンソールのキールート、またはカタログを変更した場合、ツールはそのステップで停止し、その旨を報告します。コマンドと正確な出力を添えて**[issueを開いてください](../../issues)**。
+
 ## 📄 ライセンス
 
 MIT © 2026 — [LICENSE](LICENSE)を参照。
