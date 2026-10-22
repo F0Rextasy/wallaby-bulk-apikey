@@ -309,7 +309,6 @@ class Page {
     if (!target || !target.webSocketDebuggerUrl) throw new Error('could not open a Chrome tab');
     const page = new Page(await Cdp.connect(target.webSocketDebuggerUrl));
     await page.cdp.send('Page.enable');
-    await page.cdp.send('Runtime.enable');
     page.targetId = target.id;
     return page;
   }
