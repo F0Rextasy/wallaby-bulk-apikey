@@ -112,7 +112,7 @@ Başlatıcı proxy listesini (isteğe bağlı — olmadan CLI doğrudan çalış
 
 ## ✅ Çalıştığı doğrulandı — her anahtar test edilir
 
-Aşağıdaki her kontrol **2026-10-21** tarihinde taze genel çıkışlar üzerinden çalıştırıldı (döngüde VPN yok). Üretim akışı ilk on anahtar için laboratuvarın sabitlenmiş sürücüsüyle ve **11 numaralı anahtar için bu paketin kendi CLI'siyle baştan sona** (`node src/cli.js --count 1` → `done: 1/1 keys minted`) yürütüldü ve tüm dosya **`node src/cli.js --verify-only`** ile yeniden kanıtlandı.
+Aşağıdaki her kontrol **2026-10-21** tarihinde taze genel çıkışlar üzerinden çalıştırıldı (döngüde VPN yok). Üretim akışı ilk on anahtar için laboratuvarın sabitlenmiş sürücüsüyle ve **11 numaralı anahtar için bu paketin kendi CLI'siyle baştan sona**verified**`node src/cli.js --verify-only`** ile yeniden kanıtlandı.
 
 | Kontrol | Sonuç |
 | --- | --- |

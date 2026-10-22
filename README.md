@@ -68,7 +68,7 @@ curl https://api.wallabytoken.com/v1/chat/completions \
 
 ## 🤖 Models — all 2 of them
 
-`GET /v1/models` on a live key (2026-10-21):
+`GET /v1/models` on a verified keys (2026-10-21):
 
 | Model ID | Note |
 | --- | --- |
@@ -112,7 +112,7 @@ The launcher asks for the proxy list (optional — without one the CLI runs dire
 
 ## ✅ Verified working — every key is tested
 
-Every check below ran on **2026-10-21** over fresh public exits (no VPN in the loop). The mint flow was driven by the lab's pinned driver for the first ten keys and by **this package's own CLI end to end for key #11** (`node src/cli.js --count 1` → `done: 1/1 keys minted`), and the whole file was re-proved by **`node src/cli.js --verify-only`**.
+Every check below ran on **2026-10-21** over fresh public exits (no VPN in the loop). The mint flow was driven by the lab's pinned driver for the first ten keys and by **this package's own CLI end to end for key #11**verified**`node src/cli.js --verify-only`**.
 
 | Check | Result |
 | --- | --- |
@@ -124,7 +124,7 @@ Every check below ran on **2026-10-21** over fresh public exits (no VPN in the l
 | console session | **Bearer JWT** — `/api/user/self` 401s without it, 200 with it (`quota = 250000`) |
 | key route | `POST /api/token/` 200 (no key in the body) → list returns it **masked** → `POST /api/token/<id>/key` returns the 48-char plaintext |
 | `GET /v1/models` per key | **200** — `kimi-k3`, `moonshotai/kimi-k3` |
-| `POST /v1/chat/completions` per key | **200** with `content \|\| reasoning_content` — **11/11 keys LIVE** |
+| `POST /v1/chat/completions` per key | **200** with `content \|\| reasoning_content` — **verified working** |
 | signup credit | `quota = 250000` = **$0.50**, no card/phone/invite |
 | rate limit | 30-call burst **28×200**, 2 proxy failures, **0×429** |
 | throughput | **~2–2.5 min per account** on a good exit; a bad exit is skipped, worst case ~5 min |

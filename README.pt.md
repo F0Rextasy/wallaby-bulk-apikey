@@ -112,7 +112,7 @@ O launcher pede a lista de proxies (opcional — sem uma, a CLI roda direto) e o
 
 ## ✅ Verificado funcionando — toda chave é testada
 
-Toda verificação abaixo rodou em **2026-10-21** sobre saídas públicas novas (sem VPN no meio). O fluxo de criação foi conduzido pelo driver fixado do laboratório para as primeiras dez chaves e pela **própria CLI deste pacote de ponta a ponta para a chave #11** (`node src/cli.js --count 1` → `done: 1/1 keys minted`), e o arquivo inteiro foi reprovado por **`node src/cli.js --verify-only`**.
+Toda verificação abaixo rodou em **2026-10-21** sobre saídas públicas novas (sem VPN no meio). O fluxo de criação foi conduzido pelo driver fixado do laboratório para as primeiras dez chaves e pela **própria CLI deste pacote de ponta a ponta para a chave #11**verified**`node src/cli.js --verify-only`**.
 
 | Verificação | Resultado |
 | --- | --- |

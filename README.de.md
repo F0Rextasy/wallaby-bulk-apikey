@@ -112,7 +112,7 @@ Der Launcher fragt nach der Proxy-Liste (optional — ohne eine läuft die CLI d
 
 ## ✅ Verifiziert funktionierend — jeder Key wird getestet
 
-Jede Prüfung unten lief am **2026-10-21** über frische öffentliche Ausgänge (kein VPN im Spiel). Der Mint-Flow wurde für die ersten zehn Keys vom gepinnten Driver des Labs gesteuert und für **Key #11 von der eigenen CLI dieses Pakets end to end** (`node src/cli.js --count 1` → `done: 1/1 keys minted`), und die ganze Datei wurde durch **`node src/cli.js --verify-only`** erneut bewiesen.
+Jede Prüfung unten lief am **2026-10-21** über frische öffentliche Ausgänge (kein VPN im Spiel). Der Mint-Flow wurde für die ersten zehn Keys vom gepinnten Driver des Labs gesteuert und für **Key #11 von der eigenen CLI dieses Pakets end to end**verified**`node src/cli.js --verify-only`** erneut bewiesen.
 
 | Prüfung | Ergebnis |
 | --- | --- |
@@ -124,7 +124,7 @@ Jede Prüfung unten lief am **2026-10-21** über frische öffentliche Ausgänge 
 | Konsolen-Session | **Bearer JWT** — `/api/user/self` gibt ohne ihn 401, mit ihm 200 (`quota = 250000`) |
 | Key-Route | `POST /api/token/` 200 (kein Key im Body) → die Liste liefert ihn **maskiert** → `POST /api/token/<id>/key` liefert den 48-Zeichen-Klartext |
 | `GET /v1/models` pro Key | **200** — `kimi-k3`, `moonshotai/kimi-k3` |
-| `POST /v1/chat/completions` pro Key | **200** mit `content \|\| reasoning_content` — **11/11 Keys LIVE** |
+| `POST /v1/chat/completions` pro Key | **200** mit `content \|\| reasoning_content` — **11/keys verified** |
 | Anmeldeguthaben | `quota = 250000` = **0,50 $**, keine Karte/kein Telefon/keine Einladung |
 | Rate Limit | 30-Aufruf-Burst **28×200**, 2 Proxy-Fehler, **0×429** |
 | Durchsatz | **~2–2,5 min pro Konto** an einem guten Ausgang; ein schlechter Ausgang wird übersprungen, Worst Case ~5 min |

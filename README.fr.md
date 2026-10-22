@@ -112,7 +112,7 @@ Le lanceur demande la liste de proxys (facultative — sans elle, le CLI se conn
 
 ## ✅ Vérifié fonctionnel — chaque clé est testée
 
-Chaque vérification ci-dessous a été effectuée le **2026-10-21** via de nouvelles sorties publiques (aucun VPN dans la boucle). Le flux de création a été piloté par le driver épinglé du labo pour les dix premières clés et par **le CLI de ce paquet de bout en bout pour la clé n° 11** (`node src/cli.js --count 1` → `done: 1/1 keys minted`), et l'ensemble du fichier a été revérifié par **`node src/cli.js --verify-only`**.
+Chaque vérification ci-dessous a été effectuée le **2026-10-21** via de nouvelles sorties publiques (aucun VPN dans la boucle). Le flux de création a été piloté par le driver épinglé du labo pour les dix premières clés et par **le CLI de ce paquet de bout en bout pour la clé n° 11**verified**`node src/cli.js --verify-only`**.
 
 | Vérification | Résultat |
 | --- | --- |

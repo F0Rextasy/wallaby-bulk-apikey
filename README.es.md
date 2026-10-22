@@ -112,7 +112,7 @@ El lanzador pide la lista de proxies (opcional — sin ella el CLI se ejecuta di
 
 ## ✅ Verificado y funcionando — cada clave se prueba
 
-Cada comprobación a continuación se ejecutó el **2026-10-21** sobre salidas públicas nuevas (sin VPN en el proceso). El flujo de creación fue impulsado por el driver fijado del laboratorio para las primeras diez claves y por **el propio CLI de este paquete de principio a fin para la clave #11** (`node src/cli.js --count 1` → `done: 1/1 keys minted`), y todo el archivo fue reprobado con **`node src/cli.js --verify-only`**.
+Cada comprobación a continuación se ejecutó el **2026-10-21** sobre salidas públicas nuevas (sin VPN en el proceso). El flujo de creación fue impulsado por el driver fijado del laboratorio para las primeras diez claves y por **el propio CLI de este paquete de principio a fin para la clave #11**verified**`node src/cli.js --verify-only`**.
 
 | Comprobación | Resultado |
 | --- | --- |
