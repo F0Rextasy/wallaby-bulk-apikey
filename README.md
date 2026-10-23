@@ -189,7 +189,7 @@ node src/cli.js --help
 
 With a pool, every attempt gets **its own browser pinned to that exit** (Chrome fixes its proxy at launch), so an exit that cannot clear the interstitial only costs its own attempt and the CLI moves to the next candidate. The exits that work are the ones whose IP class Cloudflare tolerates with a visible browser; dead lines show up as `page-unhealthy-after-clear` or a `chrome-error` page and are skipped.
 
-Authenticated proxies are not supported by the browser leg — use IP-allowlisted exits. Rotate the list: the best exit of one hour is often dead the next (measured 2026-10-21: the day's most reliable exit stopped answering within hours).
+Authenticated HTTP proxies are supported by the browser leg (a 407 is answered in-browser); IP-allowlisted exits work too. — use IP-allowlisted exits. Rotate the list: the best exit of one hour is often dead the next (measured 2026-10-21: the day's most reliable exit stopped answering within hours).
 
 ## 📄 Files
 

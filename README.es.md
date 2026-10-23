@@ -190,7 +190,7 @@ node src/cli.js --help
 
 Con un pool, cada intento obtiene **su propio navegador fijado a esa salida** (Chrome fija su proxy al arrancar), así que una salida que no puede superar el intersticial solo cuesta su propio intento y el CLI pasa al siguiente candidato. Las salidas que funcionan son aquellas cuya clase de IP tolera Cloudflare con un navegador visible; las líneas muertas aparecen como `page-unhealthy-after-clear` o una página `chrome-error` y se omiten.
 
-Los proxies autenticados no son compatibles con la parte del navegador — usa salidas con IP en lista blanca. Rota la lista: la mejor salida de una hora suele estar muerta a la siguiente (medido el 2026-10-21: la salida más fiable del día dejó de responder en cuestión de horas).
+Los proxies HTTP autenticados son compatibles con la parte del navegador (el 407 se responde dentro del navegador); las salidas con IP en lista blanca también funcionan. — usa salidas con IP en lista blanca. Rota la lista: la mejor salida de una hora suele estar muerta a la siguiente (medido el 2026-10-21: la salida más fiable del día dejó de responder en cuestión de horas).
 
 ## 📄 Archivos
 

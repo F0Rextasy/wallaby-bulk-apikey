@@ -190,7 +190,7 @@ node src/cli.js --help
 
 Mit einem Pool bekommt jeder Versuch **einen eigenen Browser, der an diesen Ausgang gepinnt ist** (Chrome legt seinen Proxy beim Start fest), sodass ein Ausgang, der das Interstitial nicht lösen kann, nur seinen eigenen Versuch kostet und die CLI zum nächsten Kandidaten übergeht. Die funktionierenden Ausgänge sind die, deren IP-Klasse Cloudflare bei einem sichtbaren Browser toleriert; tote Leitungen zeigen sich als `page-unhealthy-after-clear` oder eine `chrome-error`-Seite und werden übersprungen.
 
-Authentifizierte Proxys werden vom Browser-Teil nicht unterstützt — verwende Ausgänge mit IP-Allowlist. Rotiere die Liste: Der beste Ausgang einer Stunde ist oft am nächsten Tag tot (gemessen 2026-10-21: Der zuverlässigste Ausgang des Tages antwortete innerhalb von Stunden nicht mehr).
+Authentifizierte HTTP-Proxys werden vom Browser-Teil unterstützt (407 wird im Browser beantwortet); Ausgänge mit IP-Allowlist funktionieren weiterhin. — verwende Ausgänge mit IP-Allowlist. Rotiere die Liste: Der beste Ausgang einer Stunde ist oft am nächsten Tag tot (gemessen 2026-10-21: Der zuverlässigste Ausgang des Tages antwortete innerhalb von Stunden nicht mehr).
 
 ## 📄 Dateien
 

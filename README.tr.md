@@ -190,7 +190,7 @@ node src/cli.js --help
 
 Bir havuzla, her deneme **o çıkışa sabitlenmiş kendi tarayıcısını** alır (Chrome proxy'sini başlangıçta sabitler), böylece ara sayfayı temizleyemeyen bir çıkış yalnızca kendi denemesine mal olur ve CLI bir sonraki adaya geçer. İşe yarayan çıkışlar, IP sınıfına Cloudflare'in görünür bir tarayıcıyla tolere ettiği çıkışlardır; ölü hatlar `page-unhealthy-after-clear` veya bir `chrome-error` sayfası olarak görünür ve atlanır.
 
-Kimlik doğrulamalı proxy'ler tarayıcı ayağı tarafından desteklenmez — IP izin listesine alınmış çıkışlar kullanın. Listeyi döndürün: bir saatin en iyi çıkışı genellikle ertesi gün ölür (2026-10-21'de ölçüldü: günün en güvenilir çıkışı saatler içinde yanıt vermeyi bıraktı).
+Kimlik doğrulamalı HTTP proxy'ler tarayıcı ayağı tarafından desteklenir (407 tarayıcı içinde yanıtlanır); IP izin listesine alınmış çıkışlar da çalışır. — IP izin listesine alınmış çıkışlar kullanın. Listeyi döndürün: bir saatin en iyi çıkışı genellikle ertesi gün ölür (2026-10-21'de ölçüldü: günün en güvenilir çıkışı saatler içinde yanıt vermeyi bıraktı).
 
 ## 📄 Dosyalar
 
