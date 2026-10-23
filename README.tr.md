@@ -197,6 +197,7 @@ Kimlik doğrulamalı proxy'ler tarayıcı ayağı tarafından desteklenmez — I
 | Yol | İçerik |
 | --- | --- |
 | `keys.txt` | satır başına canlı kanıtlanmış bir anahtar — git tarafından yok sayılır |
+| `keys-dead.txt` | API'nin reddettiği anahtarlar (`401`/`403`/`quota`) — `anahtar<TAB>sebep<TAB>ISO` — git tarafından yok sayılır |
 | `accounts.json` | posta kutusu, çıkış, kota, anahtar ve kapı sonucu — hesap başına eklenir — git tarafından yok sayılır |
 | `proxies.txt` | çıkışlarınız, satır başına bir tane — git tarafından yok sayılır |
 

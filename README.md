@@ -196,6 +196,7 @@ Authenticated proxies are not supported by the browser leg — use IP-allowliste
 | Path | Contents |
 | --- | --- |
 | `keys.txt` | one live-proven key per line — git-ignored |
+| `keys-dead.txt` | keys the API refused (`401`/`403`/`quota`) — `key<TAB>why<TAB>ISO` — git-ignored |
 | `accounts.json` | mailbox, exit, quota, key and the gate result — appended per account — git-ignored |
 | `proxies.txt` | your exits, one per line — git-ignored |
 

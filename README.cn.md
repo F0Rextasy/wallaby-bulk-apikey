@@ -196,6 +196,7 @@ node src/cli.js --help
 | 路径 | 内容 |
 | --- | --- |
 | `keys.txt` | 每行一个经实时验证的密钥 — 已被 git 忽略 |
+| `keys-dead.txt` | 被 API 拒绝的密钥（`401`/`403`/`quota`）— `key<TAB>why<TAB>ISO` — 已被 git 忽略 |
 | `accounts.json` | 邮箱、出口、额度、密钥和门禁结果 — 按账户追加 — 已被 git 忽略 |
 | `proxies.txt` | 你的出口，每行一个 — 已被 git 忽略 |
 

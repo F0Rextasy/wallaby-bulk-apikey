@@ -197,6 +197,7 @@ Les proxys authentifiés ne sont pas pris en charge par la partie navigateur —
 | Chemin | Contenu |
 | --- | --- |
 | `keys.txt` | une clé prouvée en direct par ligne — ignoré par git |
+| `keys-dead.txt` | clés refusées par l'API (`401`/`403`/`quota`) — `clé<TAB>raison<TAB>ISO` — ignoré par git |
 | `accounts.json` | boîte mail, sortie, quota, clé et résultat du contrôle — ajouté par compte — ignoré par git |
 | `proxies.txt` | vos sorties, une par ligne — ignoré par git |
 

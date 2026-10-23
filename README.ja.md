@@ -197,6 +197,7 @@ node src/cli.js --help
 | パス | 内容 |
 | --- | --- |
 | `keys.txt` | 1行につき1つのライブ検証済みキー — git-ignored |
+| `keys-dead.txt` | APIに拒否されたキー（`401`/`403`/`quota`）— `key<TAB>why<TAB>ISO` — git-ignored |
 | `accounts.json` | メールボックス、出口、クォータ、キー、ゲート結果 — アカウントごとに追記 — git-ignored |
 | `proxies.txt` | あなたの出口、1行に1つ — git-ignored |
 

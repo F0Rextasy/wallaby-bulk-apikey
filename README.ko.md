@@ -197,6 +197,7 @@ node src/cli.js --help
 | 경로 | 내용 |
 | --- | --- |
 | `keys.txt` | 줄당 실시간 검증된 키 하나 — git 무시됨 |
+| `keys-dead.txt` | API가 거부한 키 (`401`/`403`/`quota`) — `key<TAB>why<TAB>ISO` — git 무시됨 |
 | `accounts.json` | 메일박스, 출구, 할당량, 키 및 게이트 결과 — 계정별로 추가됨 — git 무시됨 |
 | `proxies.txt` | 출구 목록, 줄당 하나 — git 무시됨 |
 

@@ -5,12 +5,14 @@
  * wallaby-bulk-apikey CLI — mint Wallaby (wallabytoken.com) accounts and one API
  * key each, then prove every key with a real completion.
  *
- * Zero dependencies: Node builtins only. A real Chrome is required — Cloudflare
- * serves its managed challenge on `/register` and on the `POST /api/verification`
- * and `POST /api/user/register` routes, and that challenge is only ever cleared
- * by a *visible* (headful) browser: measured 2026-10-21 on the same exits at the
- * same hour, headless cleared 0/9 while headful cleared 3/3. So `--headless` is
- * off by default and the README says headful is mandatory.
+ * Dependencies: Node builtins plus the bundled `src/solver.js` (`puppeteer-core`),
+ * which solves the panel's Turnstile on its own. A real Chrome is required —
+ * Cloudflare serves its managed challenge on `/register` and on the
+ * `POST /api/verification` and `POST /api/user/register` routes, and that
+ * challenge is only ever cleared by a *visible* (headful) browser: measured
+ * 2026-10-21 on the same exits at the same hour, headless cleared 0/9 while
+ * headful cleared 3/3. So `--headless` is off by default and the README says
+ * headful is mandatory.
  *
  * Flow per account (one exit, one browser tab, one mailbox):
  *   /register → clear the Cloudflare interstitial → Turnstile token for the
@@ -38,11 +40,13 @@ const path = require('path');
 const https = require('https');
 const crypto = require('crypto');
 const { spawn, spawnSync } = require('child_process');
+const { createAgent } = require('./vendor/proxy');
 
 const IS_SRC = path.basename(__dirname) === 'src';
 const ROOT = IS_SRC ? path.resolve(__dirname, '..') : __dirname;
 const KEYS_FILE = path.join(ROOT, 'keys.txt');
 const ACCOUNTS_FILE = path.join(ROOT, 'accounts.json');
+const DEAD_FILE = path.join(ROOT, 'keys-dead.txt');
 
 const API_HOST = 'api.wallabytoken.com';
 const BASE = `https://${API_HOST}`;
@@ -62,11 +66,15 @@ const HEALTHY = `location.hostname === '${API_HOST}' && ${SPA_READY} && !/ERR_|N
 
 // ------------------------------------------------------------------- options
 const argv = process.argv.slice(2);
+/** `--name v` and `--name=v` are both accepted: the spaced form is idiomatic here,
+ *  but `--count=5` silently meaning "1" is worse than a second lookup. */
 const arg = (name, dflt) => {
+  const eq = argv.find((a) => a.startsWith(`--${name}=`));
+  if (eq) return eq.slice(name.length + 3);
   const i = argv.indexOf(`--${name}`);
   return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[i + 1] : dflt;
 };
-const has = (name) => argv.includes(`--${name}`) || argv.includes(`-${name[0]}`);
+const has = (name) => argv.includes(`--${name}`) || argv.includes(`-${name[0]}`) || argv.some((a) => a.startsWith(`--${name}=`));
 
 const HELP = `wallaby-bulk-apikey — mint Wallaby API keys (one account per key)
 
@@ -79,10 +87,12 @@ const HELP = `wallaby-bulk-apikey — mint Wallaby API keys (one account per key
   --headless       NOT recommended — Cloudflare only clears in a visible browser
   --keep           leave Chrome open when the run ends
   --verify-only    re-prove every key in keys.txt, mint nothing
+  --dry            resolve the plan and exit — writes nothing, sends nothing
+  --auto           solve the panel's Turnstile with the bundled src/solver.js (default)
   --help           this text
 
-Env: WALLABY_MODEL, WALLABY_POOL, CHROME_PATH
-Default exits: none — without a pool the tool runs direct.`;
+Env: WALLABY_MODEL, WALLABY_POOL (launcher also passes WALLABY_PROXIES), CHROME_PATH
+No pool at all: runs direct (a pool that yields no usable exit is a hard error).`;
 if (has('help') || has('h') || argv.length === 0) { console.log(HELP); process.exit(0); }
 
 const COUNT = Math.max(1, parseInt(arg('count', '1'), 10) || 1);
@@ -91,10 +101,22 @@ const TRIES = Math.max(1, parseInt(arg('exits', '8'), 10) || 8);
 const HEADLESS = has('headless');
 const KEEP = has('keep');
 const VERIFY_ONLY = has('verify-only');
-const POOL_ARG = arg('pool', process.env.WALLABY_POOL || '');
+const POOL_ARG = arg('pool', process.env.WALLABY_POOL || process.env.WALLABY_PROXIES || '');
 const FIXED = arg('proxy', '');
 const PORT_ARG = parseInt(arg('port', '0'), 10) || 0;
 const CHROME_BIN = arg('browser', process.env.CHROME_PATH || '');
+/** The bundled solver is the default captcha path (one command, no manual step). */
+const AUTO = !has('no-auto');
+/** `--dry`: resolve the plan, write nothing, send nothing. */
+const DRY = has('dry');
+/** Escape hatches, documented in ADVANCED.md only: a supplied token source
+ *  replaces the solver, so an operator with their own solver keeps working. */
+const TOKENS = String(arg('token', '') || '').split(',').map((s) => s.trim()).filter(Boolean);
+const TOKEN_CMD = arg('token-cmd', '');
+const MANUAL = has('manual');
+/** Lazy: a checkout without src/solver.js still runs off an operator token source. */
+let _solver = null;
+const solver = () => (_solver && _solver.solveCaptcha ? _solver : (_solver = require('./solver.js')));
 /** The code mail is Chinese and hex (`e8794e`), 10 minutes valid, ~15-25 s out. */
 const CODE_WAIT_MS = Math.max(60000, (parseInt(arg('code-timeout', '360'), 10) || 360) * 1000);
 
@@ -104,11 +126,18 @@ const randUser = () => `${['marcus', 'elena', 'tobias', 'nadia', 'julian', 'sora
 const randPass = () => `Wb${crypto.randomBytes(3).toString('hex')}${100 + (crypto.randomBytes(2).readUInt16BE(0) % 900)}!x`;
 
 // --------------------------------------------------------------------- http
-/** One request, no proxy. `body` is a JSON object or null. Returns {status,text,json}. */
+
+/** Every exit the pool resolved to; `verify-only` uses the first one. */
+let EXITS = [];
+/** The exit the Node-side provider calls leave through; null = the pool-less default. */
+let CURRENT_EXIT = null;
+/** One request through the current exit (no exit = direct, the documented pool-less
+ *  default). `body` is a JSON object or null. Returns {status,text,json}. */
 function request(url, { method = 'GET', headers = {}, body = null, timeoutMs = 60000 } = {}) {
   return new Promise((resolve, reject) => {
     const u = new URL(url);
     const payload = body == null ? null : Buffer.from(typeof body === 'string' ? body : JSON.stringify(body));
+    const agent = CURRENT_EXIT ? createAgent(CURRENT_EXIT) : undefined;
     const req = https.request({
       host: u.hostname,
       path: u.pathname + u.search,
@@ -139,29 +168,43 @@ function request(url, { method = 'GET', headers = {}, body = null, timeoutMs = 6
 const msgOf = (r) => (r.json && (r.json.message || (r.json.error && (r.json.error.message || r.json.error)) || r.json.detail)) || String(r.text || '').slice(0, 200);
 
 // -------------------------------------------------------------------- exits
-/** `protocol://host:port` (http / socks5 / socks4). Credentials are not supported. */
+/** `[scheme://][user:pass@]host:port` (http / socks5 / socks4). Credentials are
+ *  handled at the transport: Chrome over CDP (`Page.proxyAuth`), Node through
+ *  the vendored CONNECT agent (`./vendor/proxy`). */
 function parseProxy(line) {
   const s = String(line).trim().split(/\s+/)[0];
-  const m = s.match(/^(?:(https?|socks5h?|socks4a?):\/\/)?([^:/@\s]+):(\d+)$/);
+  const m = s.match(/^(?:(https?|socks5h?|socks4a?):\/\/)?(?:([^:@/\s]+):([^@/\s]+)@)?([^:/@\s]+):(\d+)$/);
   if (!m) return null;
   const protocol = (m[1] || 'http').replace('socks5h', 'socks5').replace('socks4a', 'socks4');
-  return { protocol, host: m[2], port: parseInt(m[3], 10), line: s };
+  return { protocol, host: m[4], port: parseInt(m[5], 10), username: m[2], password: m[3], line: s };
 }
-const proxyLabel = (p) => (p ? `${p.protocol}://${p.host}:${p.port}` : '(direct)');
+const proxyLabel = (p) => (p
+  ? `${p.protocol}://${p.username ? `${encodeURIComponent(p.username)}:***@` : ''}${p.host}:${p.port}`
+  : '(direct)');
+/** Chrome never sends userinfo from `--proxy-server`: the 407 is answered over CDP. */
 const chromeProxy = (p) => (p ? `${p.protocol}://${p.host}:${p.port}` : null);
+
+/** A pool that yields no usable exit is fatal: `direct` here means *your own IP*. */
+function fatal(message) { log(`FATAL ${message}`); process.exit(1); }
 
 function loadExits() {
   const file = FIXED ? '' : (POOL_ARG || (fs.existsSync(path.join(ROOT, 'proxies.txt')) ? path.join(ROOT, 'proxies.txt') : ''));
-  if (FIXED) return [parseProxy(FIXED)].filter(Boolean);
+  if (FIXED) {
+    const one = parseProxy(FIXED);
+    if (!one) fatal(`--proxy ${FIXED} is not a usable exit`);
+    return [one];
+  }
   if (!file) return [];
-  if (!fs.existsSync(file)) { log(`pool ${file} not found — running direct`); return []; }
-  return fs.readFileSync(file, 'utf8')
-    .split(/\r?\n/)
+  if (!fs.existsSync(file)) fatal(`pool ${file} not found — refusing to run direct`);
+  const lines = fs.readFileSync(file, 'utf8').split(/\r?\n/)
     .map((l) => l.replace(/#.*$/, '').trim())
-    .filter(Boolean)
-    .map(parseProxy)
     .filter(Boolean);
+  const exits = lines.map(parseProxy).filter(Boolean);
+  if (!exits.length) fatal(`pool ${file}: ${lines.length} line(s), none a usable exit (scheme://[user:pass@]host:port) — refusing to run direct`);
+  if (exits.length < lines.length) log(`pool ${file}: ${exits.length} exit(s), ${lines.length - exits.length} line(s) rejected`);
+  return exits;
 }
+
 
 // --------------------------------------------------------------------- chrome
 function findChrome() {
@@ -352,6 +395,27 @@ class Page {
     return false;
   }
 
+  /**
+   * Chrome sends no userinfo from `--proxy-server`, so a credentialed exit answers
+   * the proxy's 407 over CDP: Fetch.authRequired → ProvideCredentials.
+   */
+  async proxyAuth(exit) {
+    if (!exit || !exit.username) return;
+    this.cdp.on('Fetch.authRequired', (p) => {
+      const isProxy = !!(p.authChallenge && p.authChallenge.source === 'Proxy');
+      this.cdp.send('Fetch.continueWithAuth', {
+        requestId: p.requestId,
+        authChallengeResponse: isProxy
+          ? { response: 'ProvideCredentials', username: exit.username, password: exit.password || '' }
+          : { response: 'Default' },
+      }).catch(() => {});
+    });
+    this.cdp.on('Fetch.requestPaused', (p) => {
+      this.cdp.send('Fetch.continueRequest', { requestId: p.requestId }).catch(() => {});
+    });
+    await this.cdp.send('Fetch.enable', { handleAuthRequests: true });
+  }
+
   close() { this.cdp.close(); }
 }
 
@@ -462,6 +526,37 @@ async function obtainToken(cdp, page, sitekey, label = 'ts') {
       }
     }
     await sleep(1500);
+  }
+  return tokenFallback(sitekey, label, clicks);
+}
+
+/**
+ * Nothing on the panel's own page answered. An operator-supplied token source
+ * wins outright, then the bundled solver — its own Chrome, pinned to the same
+ * exit, because the panel binds the token to the solving IP — then a paste.
+ */
+async function tokenFallback(sitekey, label, clicks) {
+  if (TOKENS.length) return { token: TOKENS.shift(), via: 'flag', clicks };
+  if (TOKEN_CMD) {
+    const r = spawnSync(TOKEN_CMD, { shell: true, encoding: 'utf8', timeout: 120000 });
+    const token = String(r.stdout || '').trim().split(/\s+/).pop() || '';
+    if (token) return { token, via: 'cmd', clicks };
+    log(`  [${label}] the token command printed nothing (status ${r.status})`);
+  }
+  if (AUTO) {
+    try {
+      const r = await solver().solveCaptcha({
+        type: 'turnstile', sitekey, url: `${BASE}/register`,
+        proxy: CURRENT_EXIT ? CURRENT_EXIT.line : '', timeoutMs: 150000,
+        log: (m) => log(`  [solver] ${m}`),
+      });
+      if (r.token && r.token.length > 20) return { token: r.token, via: 'solver', clicks };
+    } catch (e) { log(`  [${label}] solver gave nothing: ${String(e.message).slice(0, 140)}`); }
+  }
+  if (MANUAL) {
+    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
+    const token = await new Promise((res) => rl.question(`  [${label}] paste the cf-turnstile-response token: `, (a) => { rl.close(); res(String(a).trim()); }));
+    if (token) return { token, via: 'manual', clicks };
   }
   return { token: '', via: 'none', clicks };
 }
@@ -646,6 +741,26 @@ const appendKey = (key) => {
   fs.appendFileSync(KEYS_FILE, (fs.existsSync(KEYS_FILE) && fs.statSync(KEYS_FILE).size ? '\n' : '') + key + '\n');
   return true;
 };
+
+/**
+ * Dead-key report: a key is filed only on a *verdict* — the API refused it
+ * (401/403) or the account was cut (quota/banned). A 429, a 5xx or a transport
+ * error is the exit's problem: it is retried, never filed, or a live key would
+ * end up buried in the dead list. Format: `<key>\t<why>\t<ISO>`.
+ */
+const DEAD_VERDICT = /401|403|unauthor|forbidden|quota|insufficient|banned|disabled|invalid[-_ ]?(?:api[-_ ]?)?key/i;
+const isDeadProof = (proof) => !proof.live && DEAD_VERDICT.test([
+  proof.models && proof.models.status,
+  proof.chat && proof.chat.status,
+  proof.chat && (proof.chat.content || proof.chat.text),
+].filter((v) => v != null).join(' '));
+const deadWhy = (proof) => {
+  if (proof.chat && proof.chat.status && proof.chat.status !== 200) return `chat-${proof.chat.status}`;
+  if (proof.models && proof.models.status !== 200) return `models-${proof.models.status}`;
+  const m = String((proof.chat && proof.chat.text) || '').replace(/\s+/g, ' ').trim();
+  return m ? m.slice(0, 80) : 'dead';
+};
+const appendDead = (key, why) => fs.appendFileSync(DEAD_FILE, `${key}\t${why}\t${new Date().toISOString()}\n`);
 const readAccounts = () => { try { return JSON.parse(fs.readFileSync(ACCOUNTS_FILE, 'utf8')); } catch (e) { return []; } };
 const saveAccount = (rec) => {
   const all = readAccounts();
@@ -666,6 +781,7 @@ async function sitekey() {
  * on that attempt's exit: one account, one exit, one browser, one tab.
  */
 async function mint(exits, count) {
+  CURRENT_EXIT = exits[0] || null;
   const sk = await sitekey();
   log(`sitekey ${sk} · model ${MODEL} · ${exits.length ? `${exits.length} exit(s)` : 'DIRECT (no proxy)'} · ${HEADLESS ? 'headless (NOT recommended)' : 'headful'}`);
   let minted = 0;
@@ -673,20 +789,24 @@ async function mint(exits, count) {
     const attempts = Math.max(1, exits.length);
     for (let k = 0; k < attempts; k++) {
       const exit = exits.length ? exits[(n - 1 + k) % exits.length] : null;
+      CURRENT_EXIT = exit; // the key gate and sitekey leaves through the same exit
       const port = PORT_ARG || await freePort();
       const chrome = await launchChrome(exit, port).catch((e) => { log(`chrome failed: ${e.message}`); return null; });
       if (!chrome) break;
       let page = null;
       try {
         page = await Page.open(port);
+        await page.proxyAuth(exit);
         const rec = await mintOnExit(page, exit, sk);
         const proof = await proveKey(rec.key);
         rec.proof = proof;
         rec.at = new Date().toISOString();
         if (!proof.live) {
-          rec.status = 'key-unverified';
+          const dead = isDeadProof(proof);
+          rec.status = dead ? 'key-dead' : 'key-unverified';
           saveAccount(rec);
-          log(`  ✖ key not proven: ${JSON.stringify(proof.chat || proof.models).slice(0, 200)}`);
+          if (dead) { appendDead(rec.key, deadWhy(proof)); log(`  ✖ the panel refused the key (${deadWhy(proof)}) → ${path.basename(DEAD_FILE)}`); }
+          else log(`  ✖ key not proven: ${JSON.stringify(proof.chat || proof.models).slice(0, 200)}`);
           continue;
         }
         rec.status = 'minted';
@@ -710,21 +830,37 @@ async function mint(exits, count) {
 }
 
 async function verifyOnly() {
+  CURRENT_EXIT = EXITS[0] || null;
   const keys = readKeys();
   if (!keys.length) { log(`no keys in ${KEYS_FILE}`); return; }
   let live = 0;
+  const dead = [];
   for (const key of keys) {
     const proof = await proveKey(key);
     if (proof.live) live++;
-    log(`${key.slice(0, 10)}… models=${proof.models.status}(${proof.models.ids.length}) chat=${proof.chat ? `${proof.chat.model}:${proof.chat.status}` : 'n/a'} ${proof.live ? 'LIVE' : 'DEAD'}`);
+    else if (isDeadProof(proof)) { appendDead(key, deadWhy(proof)); dead.push(key); }
+    log(`${key.slice(0, 10)}… models=${proof.models.status}(${proof.models.ids.length}) chat=${proof.chat ? `${proof.chat.model}:${proof.chat.status}` : 'n/a'} ${proof.live ? 'LIVE' : dead.includes(key) ? `DEAD (${deadWhy(proof)})` : 'unproven — exit/rate, not filed'}`);
   }
-  log(`live: ${live}/${keys.length}`);
+  log(`live: ${live}/${keys.length}${dead.length ? ` · ${dead.length} filed dead → ${DEAD_FILE}` : ''}`);
+}
+
+/** `--dry`: the resolved plan, then exit 0 — nothing is written, nothing sent. */
+function dryRun(exits) {
+  const solverOk = (() => { try { return typeof require('./solver.js').solveCaptcha === 'function'; } catch (e) { return false; } })();
+  console.log('dry run — nothing is written and no request is sent.');
+  console.log(`  count  ${COUNT} · model ${MODEL} · ${HEADLESS ? 'headless (NOT recommended)' : 'headful'}`);
+  console.log(`  exits  ${exits.length ? `${exits.length} from ${POOL_ARG || 'proxies.txt'}` : 'direct (no pool)'}`);
+  console.log(`  solver ${solverOk ? 'src/solver.js — Turnstile solved in its own Chrome, pinned to the same exit' : 'MISSING'}`);
+  console.log(`  keys   ${KEYS_FILE} · refused keys are filed in ${DEAD_FILE}`);
 }
 
 // ------------------------------------------------------------------------ main
 (async () => {
   const exits = loadExits();
+  EXITS = exits;
+  if (DRY) return dryRun(exits);
   if (VERIFY_ONLY) return verifyOnly();
+  // A pool that was given must be spent; only a pool-less run may go direct.
   if (!exits.length) log('running WITHOUT a proxy (direct) — pass --pool proxies.txt to rotate exits');
   await mint(exits, COUNT);
 })().catch((e) => { console.error('FATAL', e && e.message ? e.message : e); process.exit(1); });

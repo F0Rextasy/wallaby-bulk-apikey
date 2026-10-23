@@ -197,6 +197,7 @@ Proxies autenticados não são suportados pela perna do navegador — use saída
 | Caminho | Conteúdo |
 | --- | --- |
 | `keys.txt` | uma chave comprovada ao vivo por linha — ignorada pelo git |
+| `keys-dead.txt` | chaves recusadas pela API (`401`/`403`/`quota`) — `chave<TAB>motivo<TAB>ISO` — ignorada pelo git |
 | `accounts.json` | caixa de correio, saída, cota, chave e o resultado do gate — anexado por conta — ignorado pelo git |
 | `proxies.txt` | suas saídas, uma por linha — ignorada pelo git |
 

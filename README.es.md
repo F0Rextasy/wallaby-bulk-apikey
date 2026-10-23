@@ -197,6 +197,7 @@ Los proxies autenticados no son compatibles con la parte del navegador — usa s
 | Ruta | Contenido |
 | --- | --- |
 | `keys.txt` | una clave probada en vivo por línea — ignorada por git |
+| `keys-dead.txt` | claves rechazadas por la API (`401`/`403`/`quota`) — `clave<TAB>motivo<TAB>ISO` — ignorado por git |
 | `accounts.json` | buzón, salida, cuota, clave y el resultado de la verificación — añadido por cuenta — ignorado por git |
 | `proxies.txt` | tus salidas, una por línea — ignorado por git |
 

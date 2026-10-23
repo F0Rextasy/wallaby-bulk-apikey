@@ -197,6 +197,7 @@ Authentifizierte Proxys werden vom Browser-Teil nicht unterstützt — verwende 
 | Pfad | Inhalt |
 | --- | --- |
 | `keys.txt` | ein live-bewiesener Schlüssel pro Zeile — von Git ignoriert |
+| `keys-dead.txt` | von der API abgelehnte Schlüssel (`401`/`403`/`quota`) — `key<TAB>Grund<TAB>ISO` — von Git ignoriert |
 | `accounts.json` | Mailbox, Ausgang, Quota, Schlüssel und das Gate-Ergebnis — pro Konto angehängt — von Git ignoriert |
 | `proxies.txt` | deine Ausgänge, einer pro Zeile — von Git ignoriert |
 
