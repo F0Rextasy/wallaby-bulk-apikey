@@ -21,7 +21,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Início rápido](#-quick-start) · [🎁 Nível gratuito](#-free-tier--how-much-you-get) · [🤖 Modelos](#-models--all-2-of-them) · [🧪 Use a API](#-how-to-use-the-api) · [✅ Verificado](#-verified-working--every-key-is-tested) · [🧭 Como funciona](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Opções](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Problemas](#-issues)
+[🛠 Início rápido](#-quick-start) · [🎁 Plano gratuito](#-free-tier--how-much-you-get) · [🤖 Modelos](#-models--all-2-of-them) · [🧪 Use a API](#-how-to-use-the-api) · [✅ Verificado](#-verified-working--every-key-is-tested) · [🧭 Como funciona](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Opções](#️-cli-options) · [🛰️ Proxies](#️-behind-a-proxy) · [🐞 Problemas](#-issues)
 
 </div>
 
@@ -35,23 +35,23 @@
 
 ## ✨ Por que isto existe
 
-Wallaby (wallabytoken.com) é uma camada de inferência operada em Sydney que revende modelos abertos de ponta em USD pré-pago, e **toda nova conta começa com $0.50 de crédito de teste gratuito** — sem cartão, sem telefone, sem recarga. Hoje o catálogo é um único modelo, **`kimi-k3`** (contexto de 1M, raciocínio sempre ativo), cobrado a **$2.70 entrada / $13.50 saída por 1M tokens** ($0.27 em cache) — 10% abaixo do preço de tabela oficial do Kimi.
+Wallaby (wallabytoken.com) é uma camada de inferência operada em Sydney que revende modelos de pesos abertos de ponta em USD pré-pago, e **toda nova conta começa com $0.50 de crédito de teste gratuito** — sem cartão, sem telefone, sem recarga. Hoje o catálogo é um único modelo, **`kimi-k3`** (contexto de 1M, raciocínio sempre ativo), cobrado a **$2.70 entrada / $13.50 saída por 1M tokens** ($0.27 em cache) — 10% abaixo do preço de tabela oficial do Kimi.
 
-O painel é um fork do New API atrás do **Cloudflare**, e o Cloudflare é toda a dificuldade: `/register` responde com um desafio gerenciado, e `POST /api/verification` mais `POST /api/user/register` também são desafiados — então nenhuma chave existe sem um navegador que detenha o `cf_clearance`. Pior, o desafio só é liberado por um navegador **visível**: medido nas mesmas saídas na mesma hora, o headless liberou **0/9** e o headful liberou **3/3**. É por isso que esta ferramenta controla um Chrome real e headful (o README repete isso, porque uma execução headless parece exatamente um painel quebrado) e por isso uma conta custa alguns minutos em vez de um segundo.
+O painel é um fork do New API atrás do **Cloudflare**, e o Cloudflare é toda a dificuldade: `/register` responde com um desafio gerenciado, e `POST /api/verification` mais `POST /api/user/register` também são desafiados — então nenhuma chave existe sem um navegador que possua `cf_clearance`. Pior, o desafio só é resolvido por um navegador **visível**: medido nas mesmas saídas na mesma hora, o headless resolveu **0/9** e o headful resolveu **3/3**. É por isso que esta ferramenta controla um Chrome real e headful (o README repete isso, porque uma execução headless parece exatamente um painel quebrado) e por isso uma conta custa alguns minutos em vez de um segundo.
 
-## 🎁 Nível gratuito — quanto você recebe
+## 🎁 Plano gratuito — quanto você recebe
 
 | O quê | Valor |
 | --- | --- |
-| Crédito de cadastro | **$0.50** — lido do console como `quota = 250000` (`quota_per_unit = 500000`, USD 1:1) |
-| Cartão / telefone | **nenhum dos dois** — endereço de e-mail + senha + um código enviado por e-mail + uma verificação humana |
+| Crédito de cadastro | **$0.50** — lido de volta do console como `quota = 250000` (`quota_per_unit = 500000`, USD 1:1) |
+| Cartão / telefone | **nenhum** — endereço de e-mail + senha + um código enviado por e-mail + uma verificação humana |
 | Expiração | **nunca** (“sem cartão · sem recarga · nunca expira”) |
-| Modelos no nível gratuito | **`kimi-k3`** (+ alias `moonshotai/kimi-k3`); DeepSeek V4 Flash/Pro estão listados como temporariamente indisponíveis |
+| Modelos no plano gratuito | **`kimi-k3`** (+ alias `moonshotai/kimi-k3`); DeepSeek V4 Flash/Pro estão listados como temporariamente indisponíveis |
 | Preço | $2.70 entrada / $13.50 saída / $0.27 em cache por 1M (tabela oficial do Kimi **−10%**) |
-| Limite de taxa | **nenhum observado** — uma rajada de 30 chamadas respondeu 28×200 sem nenhum 429 (as outras duas foram falhas de proxy) |
-| A unidade que escala | **uma conta = uma chave**; o crédito fica na conta, então 10 chaves = 10 × $0.50 |
+| Limite de taxa | **nenhum visto** — uma rajada de 30 chamadas respondeu 28×200 sem nenhum 429 (as outras duas foram falhas de proxy) |
+| A unidade que escala | **uma conta = uma chave**; o crédito fica na conta, então chaves = 10 × $0.50 |
 
-> 💡 O nível gratuito é definido pela Wallaby e pode mudar. Confira os números ao vivo em [wallabytoken.com](https://wallabytoken.com) — e deixe o próprio portão da ferramenta decidir:
+> 💡 O plano gratuito é definido pela Wallaby e pode mudar. Confira os números ao vivo em [wallabytoken.com](https://wallabytoken.com) — e deixe o próprio gate da ferramenta decidir:
 
 ```bash
 ```bash
@@ -61,20 +61,20 @@ node src/cli.js --verify-only
 
 # or by hand (keys carry no `sk-` prefix)
 curl https://api.wallabytoken.com/v1/chat/completions \
-  -H "Authorization: Bearer YOUR_KEY" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer 3I7ulkrQVXR1YL…" -H "Content-Type: application/json" \
   -d '{"model":"kimi-k3","messages":[{"role":"user","content":"gday"}],"max_tokens":64}'
 ```
 
-`kimi-k3` é um modelo de raciocínio: um `max_tokens` pequeno é consumido por `reasoning_tokens` e `content` volta como `null` mesmo que a chamada tenha tido sucesso — esta ferramenta conta `content || reasoning_content` como prova de vida exatamente por esse motivo.
+`kimi-k3` is a reasoning model: a small `max_tokens` is consumed by `reasoning_tokens` and `content` comes back `null` even though the call succeeded — this tool counts `content || reasoning_content` as proof of life for exactly that reason.
 ```
 
-## 🤖 Modelos — todos os 2
+## 🤖 Modelos — todos os 2 deles
 
 `GET /v1/models` em uma chave ativa (2026-10-21):
 
 | ID do modelo | Observação |
 | --- | --- |
-| `kimi-k3` | o modelo pelo qual este provedor existe — contexto de 1M, raciocínio aberto, pensamento cobrado como saída |
+| `kimi-k3` | o modelo pelo qual este provedor existe — contexto de 1M, raciocínio de pesos abertos, pensamento cobrado como saída |
 | `moonshotai/kimi-k3` | o mesmo modelo sob seu id upstream |
 
 As respostas nomeiam a pilha de serviço em vez do alias — `"model": "FW-Kimi-K3"` e `"model": "accounts/fireworks/models/kimi-k3"` — então o backend é o Fireworks. O provedor publica uma lista de preços legível por máquina em [wallabytoken.com/pricing.json](https://wallabytoken.com/pricing.json).
@@ -83,16 +83,16 @@ As respostas nomeiam a pilha de serviço em vez do alias — `"model": "FW-Kimi-
 
 URL base **`https://api.wallabytoken.com/v1`** — compatível com OpenAI, e a própria documentação do provedor diz que a migração são duas linhas (`base_url` e a chave).
 
-As chaves têm **48 caracteres sem prefixo `sk-`**; a autenticação é um bearer token em toda requisição.
+As chaves têm **48 caracteres sem prefixo `sk-`**; a autenticação é um bearer token em cada requisição.
 
 ```python
 from openai import OpenAI
-c = OpenAI(base_url="https://api.wallabytoken.com/v1", api_key="YOUR_KEY")
+c = OpenAI(base_url="https://api.wallabytoken.com/v1", api_key="<your key>")
 print(c.chat.completions.create(model="kimi-k3",
       messages=[{"role":"user","content":"gday"}]).choices[0].message.reasoning_content)
 ```
 
-A documentação do site promete nenhum teto de limite de taxa no nível gratuito; a medição concorda (30 chamadas rápidas, zero 429s, latências de 2-36 s com uma cauda upstream).
+A documentação do site promete nenhum teto de limite de taxa no plano gratuito; a medição concorda (30 chamadas rápidas, zero 429s, latências de 2-36 s com uma cauda upstream).
 
 ## 🛠 Início rápido
 
@@ -104,32 +104,38 @@ node src/cli.js --count 5 --pool proxies.txt # five accounts, one exit each
 node src/cli.js --verify-only                # re-prove every key already in keys.txt
 ```
 
-**Um navegador visível (headful) é obrigatório** — o interstitial do Cloudflare em `/register` não é liberado no Chrome headless, e o desafio também protege `POST /api/verification` e `POST /api/user/register`. Por isso a flag fica *desligada*: `--headless` existe apenas para experimentos.
+**Um navegador visível (headful) é obrigatório** — o interstitial do Cloudflare em `/register` não é resolvido no Chrome headless, e o desafio também protege `POST /api/verification` e `POST /api/user/register`. Por isso a flag está *desligada*: `--headless` existe apenas para experimentos.
 
-Uma chave é gravada em `keys.txt` **somente depois** que `GET /v1/models` e uma conclusão real responderam, e toda conta (caixa de correio, saída, cota, chave, prova) é anexada a `accounts.json`.
+Uma chave é escrita em `keys.txt` **somente depois** que `GET /v1/models` e uma conclusão real responderam, e cada conta (caixa de correio, saída, cota, chave, prova) é anexada a `accounts.json`.
 
 ### 🖱️ O launcher
 
-O launcher pede a lista de proxies (opcional — sem uma, a CLI roda direto) e o número de contas, memoriza ambos e executa a CLI. `--verify-only` reprova as chaves já presentes em `keys.txt`.
+O launcher pede a lista de proxies (opcional — sem uma, o CLI roda direto) e a contagem de contas, lembra ambos e executa o CLI. `--verify-only` reprova as chaves já em `keys.txt`.
 
 ## ✅ Verificado funcionando — toda chave é testada
 
-Toda verificação abaixo rodou em **2026-10-21** sobre saídas públicas novas (sem VPN no meio). O fluxo de criação foi conduzido pelo driver fixado do laboratório para as primeiras dez chaves e pela **própria CLI deste pacote de ponta a ponta para a chave #11**verified**`node src/cli.js --verify-only`**.
+Toda verificação abaixo rodou em **2026-10-21** sobre saídas públicas novas (sem VPN no meio). O fluxo de criação foi conduzido pelo driver fixado do laboratório para as primeiras dez chaves e pelo **próprio CLI deste pacote de ponta a ponta para a chave #11** (`node src/cli.js --count 1` → `done: every key minted`), e o arquivo inteiro foi reprovado por **`node src/cli.js --verify-only`**.
 
 | Verificação | Resultado |
 | --- | --- |
-| Interstitial de `/register` em um Chrome **headful** | **liberado** — 2–14 rodadas de clique, em toda saída que passou |
-| Controle headless nessas saídas | **0/9 liberações** na mesma hora — é por isso que a flag fica desligada por padrão |
+| Interstitial de `/register` em um Chrome **headful** | **resolvido** — 2–14 rodadas de clique, em toda saída que passou |
+| Controle headless nessas saídas | **0/9 resolvidos** na mesma hora — é por isso que a flag está desligada por padrão |
 | Desafio localizado | O CF serve o interstitial no idioma do navegador («Bir dakika lütfen…» em um Chrome `tr`, medido em 2026-10-21) → o detector testa a **raiz da SPA do painel**, não o título, e o Chrome é fixado em `--lang=en-US` |
-| Código enviado por e-mail | **~15–25 s** de `support@<panel-mail>` («Wallaby邮箱验证邮件»), código de 6 caracteres, válido por 10 minutos |
+| Código enviado por e-mail | **~15–25 s** de `support@wallabytoken.com` («Wallaby邮箱验证邮件»), código de 6 caracteres, válido por 10 minutos |
 | `POST /api/user/register?turnstile=` | **200** com `data.access_token` (JWT); um token apenas no corpo responde `Turnstile token 为空` |
 | Sessão do console | **Bearer JWT** — `/api/user/self` dá 401 sem ele, 200 com ele (`quota = 250000`) |
 | Rota da chave | `POST /api/token/` 200 (sem chave no corpo) → a listagem a retorna **mascarada** → `POST /api/token/<id>/key` retorna o texto simples de 48 caracteres |
 | `GET /v1/models` por chave | **200** — `kimi-k3`, `moonshotai/kimi-k3` |
-| `POST /v1/chat/completions` por chave | **200** com `content \|\| reasoning_content` — **11/11 chaves ATIVAS** |
+| `POST /v1/chat/completions` por chave | **200** com `content \|\| reasoning_content` — **toda chave verificada** |
 | Crédito de cadastro | `quota = 250000` = **$0.50**, sem cartão/telefone/convite |
 | Limite de taxa | Rajada de 30 chamadas **28×200**, 2 falhas de proxy, **0×429** |
-| Vazão | **~2–2,5 min por conta** em uma boa saída; uma saída ruim é pulada, pior caso ~5 min |
+| Throughput | **~2–2,5 min por conta** em uma boa saída; uma saída ruim é pulada, pior caso ~5 min |
+
+> **Portões de qualidade.** Toda chave aqui passou por um `chat-200` ao vivo antes de ser escrita em `keys.txt`
+> (chaves mortas nunca são entregues). As combinações do roteador seguem a mesma regra no nível do modelo: uma entrada é
+> adicionada **somente se o modelo responder `chat-200` e conseguir chamar ferramentas** — um modelo sem suporte a ferramentas,
+> uma chave morta ou um provedor morto é descartado em vez de adicionado. Reexecute a etapa de verificação a qualquer momento;
+> as falhas são relatadas, nunca escondidas.
 
 ## 🧭 Como funciona
 
@@ -144,16 +150,16 @@ inbox (one address per account)                                  a fresh address
 
 | Etapa | Chamada | Observações |
 | --- | --- | --- |
-| Caixa de correio | alias temp.tf (`outlook`/`hotmail` plus-alias) | um endereço por conta; o painel rejeita 9 890 domínios descartáveis, e esta família é uma caixa de correio real da Microsoft |
-| Interstitial | `/register` em um Chrome **headful** | o widget fica em um shadow root fechado, então o DOM é perfurado (`DOM.getDocument {pierce:true}`) e a caixa é clicada com eventos reais de mouse; 4–10 rodadas |
-| Turnstile | o próprio widget do painel (`turnstile_sitekey` de `/api/status`) | lido nativamente quando a página o resolve (tokens de 773–794 caracteres), caso contrário montado e clicado no mesmo ritmo |
-| Código | `GET /api/verification?email=&turnstile=` → código enviado por e-mail | o token deve ir na **query string**; apenas no corpo, a rota responde `Turnstile token 为空` |
-| Registro | `POST /api/user/register?turnstile=` | envia por e-mail um código de 6 caracteres (hex em todas as amostras, válido por 10 minutos, entregue em ~15–25 s de `support@<panel-mail>`) |
-| Sessão | o JWT `data.access_token` do registro/login | o console é autenticado com **Bearer**, não cookies: `/api/user/self` responde `401 invalid access token` sem o cabeçalho |
-| Chave | `POST /api/token/` → `POST /api/token/<id>/key` | a criação responde 200 **sem** chave e a listagem a retorna **mascarada** (`zcMh**********UCAK`); o texto simples só vem da rota `/key` |
-| Prova | `GET /v1/models` + `POST /v1/chat/completions` | direto do Node — o relay não desafia `/v1/*`; `content || reasoning_content` conta |
+| caixa de correio | alias temp.tf (`outlook`/`hotmail` plus-alias) | um endereço por conta; o painel rejeita 9 890 domínios descartáveis, e esta família é uma caixa de correio real da Microsoft |
+| interstitial | `/register` em um Chrome **headful** | o widget vive em um shadow root fechado, então o DOM é perfurado (`DOM.getDocument {pierce:true}`) e a caixa é clicada com eventos reais de mouse; 4–10 rodadas |
+| turnstile | o próprio widget do painel (`turnstile_sitekey` de `/api/status`) | lido nativamente quando a página o resolve (tokens de 773–794 caracteres), caso contrário montado e clicado no mesmo ritmo |
+| código | `GET /api/verification?email=&turnstile=` → código enviado por e-mail | o token deve viajar na **query string**; apenas no corpo, a rota responde `Turnstile token 为空` |
+| registro | `POST /api/user/register?turnstile=` | envia por e-mail um código de 6 caracteres (hex em todas as amostras, válido por 10 minutos, entregue em ~15–25 s de `support@wallabytoken.com`) |
+| sessão | o JWT `data.access_token` do registro/login | o console é autenticado com **Bearer**, não cookies: `/api/user/self` responde `401 invalid access token` sem o cabeçalho |
+| chave | `POST /api/token/` → `POST /api/token/<id>/key` | a criação responde 200 **sem** uma chave e a listagem a retorna **mascarada** (`zcMh**********UCAK`); o texto simples só vem da rota `/key` |
+| prova | `GET /v1/models` + `POST /v1/chat/completions` | direto do Node — o relay não desafia `/v1/*`; `content || reasoning_content` conta |
 
-## ⚙️ Opções da CLI
+## ⚙️ Opções do CLI
 
 ```bash
 node src/cli.js --count N        # accounts to mint (serial)
@@ -169,30 +175,30 @@ node src/cli.js --help
 | Flag | Padrão | Significado |
 | --- | --- | --- |
 | `--count N` | `1` | contas a criar, um navegador por vez |
-| `--pool FILE` | `proxies.txt` se presente | uma saída por linha (`http://`, `socks5://`); sem isso a execução é direta |
+| `--pool FILE` | `proxies.txt` se presente | uma saída por linha (`http://`, `socks5://`); sem ela a execução é direta |
 | `--proxy URL` | — | fixa uma única saída |
 | `--exits K` | `8` | quantas saídas candidatas uma conta pode queimar antes de ser abandonada |
-| `--model ID` | `kimi-k3` | modelo usado para o portão ao vivo |
+| `--model ID` | `kimi-k3` | modelo usado para o gate ao vivo |
 | `--port N` | auto | porta do Chrome DevTools |
-| `--headless` | desligado | apenas para experimentos: o Cloudflare não vai liberar |
+| `--headless` | desligado | apenas para experimentos: o Cloudflare não vai resolver |
 | `--keep` | desligado | deixa o Chrome aberto quando a execução termina |
 | `--code-timeout S` | `360` | quanto tempo esperar pelo código enviado por e-mail |
 
 ## 🛰️ Atrás de um proxy
 
-**Opcional — recomendado em escala.** Sem um pool, a CLI avisa e conecta diretamente; cadastro, criação de chave e verificação são idênticos, só muda a origem dos pacotes.
+**Opcional — recomendado em escala.** Sem um pool, o CLI avisa e se conecta diretamente; cadastro, criação de chave e verificação são idênticos, só a origem dos pacotes muda.
 
-Com um pool, cada tentativa recebe **seu próprio navegador fixado naquela saída** (o Chrome fixa seu proxy na inicialização), então uma saída que não consegue liberar o interstitial custa apenas sua própria tentativa e a CLI passa para o próximo candidato. As saídas que funcionam são aquelas cuja classe de IP o Cloudflare tolera com um navegador visível; linhas mortas aparecem como `page-unhealthy-after-clear` ou uma página `chrome-error` e são puladas.
+Com um pool, cada tentativa recebe **seu próprio navegador fixado naquela saída** (o Chrome fixa seu proxy na inicialização), então uma saída que não consegue resolver o interstitial custa apenas sua própria tentativa e o CLI passa para o próximo candidato. As saídas que funcionam são aquelas cuja classe de IP o Cloudflare tolera com um navegador visível; linhas mortas aparecem como `page-unhealthy-after-clear` ou uma página `chrome-error` e são puladas.
 
-Proxies autenticados não são suportados pela parte do navegador — use saídas com IP na lista de permissões. Rotacione a lista: a melhor saída de uma hora costuma estar morta na seguinte (medido em 2026-10-21: a saída mais confiável do dia parou de responder em poucas horas).
+Proxies autenticados não são suportados pela perna do navegador — use saídas com IP na lista de permissões. Rotacione a lista: a melhor saída de uma hora costuma estar morta na seguinte (medido em 2026-10-21: a saída mais confiável do dia parou de responder em poucas horas).
 
 ## 📄 Arquivos
 
 | Caminho | Conteúdo |
 | --- | --- |
-| `keys.txt` | uma chave comprovadamente ativa por linha — ignorado pelo git |
-| `accounts.json` | caixa de correio, saída, cota, chave e o resultado do portão — anexado por conta — ignorado pelo git |
-| `proxies.txt` | suas saídas, uma por linha — ignorado pelo git |
+| `keys.txt` | uma chave comprovada ao vivo por linha — ignorada pelo git |
+| `accounts.json` | caixa de correio, saída, cota, chave e o resultado do gate — anexado por conta — ignorado pelo git |
+| `proxies.txt` | suas saídas, uma por linha — ignorada pelo git |
 
 ## 🔌 Conectar ao 9Router
 
@@ -213,6 +219,7 @@ node src/connect-omniroute.js --base http://localhost:20128 --password 123456
 ```
 
 Padrões: `--prefix wallaby`, `--base-url https://api.wallabytoken.com/v1`, `--model kimi-k3`. Os modelos são servidos como `wallaby/kimi-k3`.
+
 ## 🔑 O que uma chave te dá
 
 | | |

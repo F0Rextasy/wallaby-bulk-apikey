@@ -21,7 +21,7 @@
 [![OmniRoute](https://img.shields.io/badge/OmniRoute-connector-8B5CF6?style=for-the-badge)](#-connect-to-omniroute)
 [![X](https://img.shields.io/badge/X-%40bigbullapp-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/bigbullapp)
 
-[🛠 Hızlı başlangıç](#-quick-start) · [🎁 Ücretsiz katman](#-free-tier--how-much-you-get) · [🤖 Modeller](#-models--all-2-of-them) · [🧪 API'yi kullanma](#-how-to-use-the-api) · [✅ Doğrulandı](#-verified-working--every-key-is-tested) · [🧭 Nasıl çalışır](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [⚙️ Seçenekler](#️-cli-options) · [🛰️ Proxy'ler](#️-behind-a-proxy) · [🐞 Sorunlar](#-issues)
+[🛠 Hızlı başlangıç](#-quick-start) · [🎁 Ücretsiz katman](#-free-tier--how-much-you-get) · [🤖 Modeller](#-models--all-2-of-them) · [🧪 API'yi kullanın](#-how-to-use-the-api) · [✅ Doğrulandı](#-verified-working--every-key-is-tested) · [🧭 Nasıl çalışır](#-how-it-works) · [🔌 9Router](#-connect-to-9router) · [🔌 OmniRoute](#-connect-to-omniroute) · [⚙️ Seçenekler](#️-cli-options) · [🛰️ Proxy'ler](#️-behind-a-proxy) · [🐞 Sorunlar](#-issues)
 
 </div>
 
@@ -35,9 +35,9 @@
 
 ## ✨ Bu neden var
 
-Wallaby (wallabytoken.com), ön ödemeli USD karşılığında öncü açık ağırlıklı modelleri yeniden satan, Sidney merkezli bir çıkarım katmanıdır ve **her yeni hesap $0.50 ücretsiz deneme kredisiyle başlar** — kart yok, telefon yok, bakiye yükleme yok. Bugün katalog tek bir modelden oluşuyor: **`kimi-k3`** (1M bağlam, sürekli açık akıl yürütme), **1M token başına $2.70 giriş / $13.50 çıkış** ($0.27 önbelleğe alınmış) fiyatlandırmayla — resmi Kimi liste fiyatının %10 altında.
+Wallaby (wallabytoken.com), Sidney'de işletilen ve ön ödemeli USD karşılığında öncü açık ağırlıklı modelleri yeniden satan bir çıkarım katmanıdır ve **her yeni hesap $0.50 ücretsiz deneme kredisiyle başlar** — kart yok, telefon yok, bakiye yükleme yok. Bugün katalog tek bir modelden oluşuyor: **`kimi-k3`** (1M bağlam, sürekli açık akıl yürütme), **1M token başına $2.70 giriş / $13.50 çıkış** ($0.27 önbelleklenmiş) olarak faturalandırılıyor — resmi Kimi liste fiyatının %10 altında.
 
-Panel, **Cloudflare** arkasında bir New API çatalıdır ve tüm zorluk Cloudflare'dir: `/register` yönetilen bir doğrulama sorusu döndürür ve `POST /api/verification` ile `POST /api/user/register` de sorgulanır — yani `cf_clearance` tutan bir tarayıcı olmadan hiçbir anahtar var olamaz. Daha kötüsü, doğrulama yalnızca **görünür** bir tarayıcıyla temizlenir: aynı saatte aynı çıkışlarda ölçüldüğünde, headless **0/9** temizledi ve headful **3/3** temizledi. Bu yüzden bu araç gerçek, headful bir Chrome'u çalıştırır (README bunu tekrarlıyor, çünkü headless bir çalıştırma tam olarak bozuk bir panel gibi görünür) ve bu yüzden bir hesap bir saniye yerine birkaç dakika sürer.
+Panel, **Cloudflare** arkasında bir New API çatalıdır ve Cloudflare tüm zorluğun kendisidir: `/register` yönetilen bir doğrulama sorusu döndürür ve `POST /api/verification` ile `POST /api/user/register` de sorgulanır — yani `cf_clearance` tutan bir tarayıcı olmadan hiçbir anahtar var olamaz. Daha kötüsü, doğrulama sorusu yalnızca **görünür** bir tarayıcıyla temizlenir: aynı saatte aynı çıkışlarda ölçüldüğünde, headless **0/9** temizledi ve headful **3/3** temizledi. Bu yüzden bu araç gerçek, headful bir Chrome'u çalıştırır (README bunu tekrarlıyor, çünkü headless bir çalıştırma tam olarak bozuk bir panel gibi görünür) ve bu yüzden bir hesap bir saniye yerine birkaç dakika sürer.
 
 ## 🎁 Ücretsiz katman — ne kadar alıyorsunuz
 
@@ -45,27 +45,27 @@ Panel, **Cloudflare** arkasında bir New API çatalıdır ve tüm zorluk Cloudfl
 | --- | --- |
 | Kayıt kredisi | **$0.50** — konsoldan `quota = 250000` olarak okunur (`quota_per_unit = 500000`, USD 1:1) |
 | Kart / telefon | **hiçbiri** — e-posta adresi + parola + e-postayla gelen kod + insan doğrulaması |
-| Bitiş | **asla** ("kart yok · bakiye yükleme yok · asla sona ermez") |
+| Son kullanma | **asla** ("kart yok · bakiye yükleme yok · asla sona ermez") |
 | Ücretsiz katmandaki modeller | **`kimi-k3`** (+ takma ad `moonshotai/kimi-k3`); DeepSeek V4 Flash/Pro geçici olarak kullanılamaz olarak listeleniyor |
-| Fiyat | 1M başına $2.70 giriş / $13.50 çıkış / $0.27 önbelleğe alınmış (resmi Kimi listesi **−%10**) |
+| Fiyat | 1M başına $2.70 giriş / $13.50 çıkış / $0.27 önbelleklenmiş (resmi Kimi listesi **−%10**) |
 | Hız sınırı | **hiç görülmedi** — 30 çağrılık bir patlama 28×200 yanıtladı, hiç 429 yok (diğer ikisi proxy hatasıydı) |
-| Ölçeklenen birim | **bir hesap = bir anahtar**; kredi hesapta yaşar, yani 10 anahtar = 10 × $0.50 |
+| Ölçeklenen birim | **bir hesap = bir anahtar**; kredi hesapta yaşar, yani anahtarlar = 10 × $0.50 |
 
-> 💡 Ücretsiz katman Wallaby tarafından belirlenir ve değişebilir. Canlı sayıları [wallabytoken.com](https://wallabytoken.com) adresinden kontrol edin — ve kararı aracın kendi kapısına bırakın:
+> 💡 Ücretsiz katman Wallaby tarafından belirlenir ve değişebilir. Güncel sayıları [wallabytoken.com](https://wallabytoken.com) adresinden kontrol edin — ve aracın kendi kapısının karar vermesine izin verin:
 
 ```bash
 ```bash
 
-# keys.txt içindeki her anahtar: model listesi artı gerçek bir tamamlama
+# keys.txt içindeki her anahtar: model listesi artı bir gerçek tamamlama
 node src/cli.js --verify-only
 
 # veya elle (anahtarlarda `sk-` öneki yok)
 curl https://api.wallabytoken.com/v1/chat/completions \
-  -H "Authorization: Bearer YOUR_KEY" -H "Content-Type: application/json" \
+  -H "Authorization: Bearer 3I7ulkrQVXR1YL…" -H "Content-Type: application/json" \
   -d '{"model":"kimi-k3","messages":[{"role":"user","content":"gday"}],"max_tokens":64}'
 ```
 
-`kimi-k3` bir akıl yürütme modelidir: küçük bir `max_tokens` `reasoning_tokens` tarafından tüketilir ve çağrı başarılı olsa bile `content` `null` döner — bu araç tam da bu nedenle `content || reasoning_content` değerini yaşam kanıtı olarak sayar.
+`kimi-k3` bir akıl yürütme modelidir: küçük bir `max_tokens` `reasoning_tokens` tarafından tüketilir ve çağrı başarılı olsa bile `content` `null` döner — bu araç tam da bu nedenle `content || reasoning_content`'i yaşam kanıtı olarak sayar.
 ```
 
 ## 🤖 Modeller — ikisi de
@@ -75,24 +75,24 @@ Canlı bir anahtarda `GET /v1/models` (2026-10-21):
 | Model Kimliği | Not |
 | --- | --- |
 | `kimi-k3` | bu sağlayıcının var olma sebebi olan model — 1M bağlam, açık ağırlıklı akıl yürütme, düşünme çıkış olarak faturalandırılır |
-| `moonshotai/kimi-k3` | aynı model, üst kaynak kimliği altında |
+| `moonshotai/kimi-k3` | aynı model, yukarı akış kimliği altında |
 
-Yanıtlar takma ad yerine hizmet veren yığını adlandırır — `"model": "FW-Kimi-K3"` ve `"model": "accounts/fireworks/models/kimi-k3"` — yani arka uç Fireworks'tür. Sağlayıcı, [wallabytoken.com/pricing.json](https://wallabytoken.com/pricing.json) adresinde makine tarafından okunabilir bir fiyat listesi yayınlar.
+Yanıtlar takma adı değil, hizmet veren yığını adlandırır — `"model": "FW-Kimi-K3"` ve `"model": "accounts/fireworks/models/kimi-k3"` — yani arka uç Fireworks. Sağlayıcı, [wallabytoken.com/pricing.json](https://wallabytoken.com/pricing.json) adresinde makine tarafından okunabilir bir fiyat listesi yayınlar.
 
 ## 🧪 API nasıl kullanılır
 
 Temel URL **`https://api.wallabytoken.com/v1`** — OpenAI uyumlu ve sağlayıcının kendi belgeleri geçişin iki satır olduğunu söylüyor (`base_url` ve anahtar).
 
-Anahtarlar **`sk-` öneki olmayan 48 karakterdir**; kimlik doğrulama her istekte bir bearer token'dır.
+Anahtarlar **48 karakterdir ve `sk-` öneki yoktur**; kimlik doğrulama her istekte bir bearer token'dır.
 
 ```python
 from openai import OpenAI
-c = OpenAI(base_url="https://api.wallabytoken.com/v1", api_key="YOUR_KEY")
+c = OpenAI(base_url="https://api.wallabytoken.com/v1", api_key="<your key>")
 print(c.chat.completions.create(model="kimi-k3",
       messages=[{"role":"user","content":"gday"}]).choices[0].message.reasoning_content)
 ```
 
-Sitenin belgeleri ücretsiz katmanda hız sınırı tavanı olmadığını vaat ediyor; ölçüm de bunu doğruluyor (30 hızlı çağrı, sıfır 429, üst kaynak kuyruğuyla 2-36 s gecikmeler).
+Sitenin belgeleri ücretsiz katmanda hız sınırı tavanı olmadığını vaat ediyor; ölçüm de aynı fikirde (30 hızlı çağrı, sıfır 429, yukarı akış kuyruğuyla 2-36 s gecikmeler).
 
 ## 🛠 Hızlı başlangıç
 
@@ -101,35 +101,41 @@ cd wallaby-bulk-apikey
 printf 'socks5://host:port\n' > proxies.txt   # isteğe bağlı — olmadan araç doğrudan çalışır
 node src/cli.js --count 1                    # bir hesap, baştan sona, görünür bir Chrome'da
 node src/cli.js --count 5 --pool proxies.txt # beş hesap, her biri bir çıkış
-node src/cli.js --verify-only                # keys.txt içindeki her anahtarı yeniden kanıtla
+node src/cli.js --verify-only                # keys.txt içinde zaten olan her anahtarı yeniden kanıtla
 ```
 
-**Görünür (headful) bir tarayıcı zorunludur** — Cloudflare'in `/register` üzerindeki ara sayfası headless Chrome'da temizlenmez ve doğrulama ayrıca `POST /api/verification` ile `POST /api/user/register` isteklerini korur. Bu yüzden bayrak *kapalı*: `--headless` yalnızca deneyler için var.
+**Görünür (headful) bir tarayıcı zorunludur** — Cloudflare'in `/register` üzerindeki ara sayfası headless Chrome'da temizlenmez ve doğrulama sorusu ayrıca `POST /api/verification` ile `POST /api/user/register`'ı da korur. Bu yüzden bayrak *kapalı*dır: `--headless` yalnızca deneyler için vardır.
 
 Bir anahtar `keys.txt` dosyasına **yalnızca** `GET /v1/models` ve gerçek bir tamamlama yanıt verdikten **sonra** yazılır ve her hesap (posta kutusu, çıkış, kota, anahtar, kanıt) `accounts.json` dosyasına eklenir.
 
 ### 🖱️ Başlatıcı
 
-Başlatıcı proxy listesini (isteğe bağlı — olmadan CLI doğrudan çalışır) ve hesap sayısını sorar, ikisini de hatırlar ve CLI'yi çalıştırır. `--verify-only`, `keys.txt` içinde zaten bulunan anahtarları yeniden kanıtlar.
+Başlatıcı, proxy listesini (isteğe bağlı — olmadan CLI doğrudan çalışır) ve hesap sayısını sorar, ikisini de hatırlar ve CLI'yi çalıştırır. `--verify-only`, `keys.txt` içinde zaten olan anahtarları yeniden kanıtlar.
 
 ## ✅ Çalıştığı doğrulandı — her anahtar test edilir
 
-Aşağıdaki her kontrol **2026-10-21** tarihinde taze genel çıkışlar üzerinden çalıştırıldı (döngüde VPN yok). Üretim akışı ilk on anahtar için laboratuvarın sabitlenmiş sürücüsüyle ve **11 numaralı anahtar için bu paketin kendi CLI'siyle baştan sona**verified**`node src/cli.js --verify-only`** ile yeniden kanıtlandı.
+Aşağıdaki her kontrol **2026-10-21** tarihinde taze genel çıkışlar üzerinden çalıştırıldı (döngüde VPN yok). Üretim akışı ilk on anahtar için laboratuvarın sabitlenmiş sürücüsüyle ve **11 numaralı anahtar için bu paketin kendi CLI'siyle baştan sona** (`node src/cli.js --count 1` → `done: every key minted`) yürütüldü ve tüm dosya **`node src/cli.js --verify-only`** ile yeniden kanıtlandı.
 
 | Kontrol | Sonuç |
 | --- | --- |
 | **Headful** Chrome'da `/register` ara sayfası | **temizlendi** — 2–14 tıklama turu, geçen her çıkışta |
-| Bu çıkışlarda headless kontrolü | Aynı saatte **0/9 temizleme** — bu yüzden bayrak varsayılan olarak kapalı |
-| Yerelleştirilmiş doğrulama | CF ara sayfayı tarayıcının dilinde sunar (bir `tr` Chrome'da «Bir dakika lütfen…», 2026-10-21'de ölçüldü) → algılayıcı başlığı değil **panel SPA kökünü** test eder ve Chrome `--lang=en-US` olarak sabitlenir |
-| E-postayla gelen kod | `support@<panel-mail>` adresinden **~15–25 s** («Wallaby邮箱验证邮件»), 6 karakterli kod, 10 dakika geçerli |
-| `POST /api/user/register?turnstile=` | `data.access_token` (JWT) ile **200**; yalnızca gövdede token `Turnstile token 为空` yanıtlar |
-| Konsol oturumu | **Bearer JWT** — onsuz `/api/user/self` 401, onunla 200 (`quota = 250000`) |
+| Bu çıkışlarda headless kontrolü | aynı saatte **0/9 temizleme** — bu yüzden bayrak varsayılan olarak kapalı |
+| Yerelleştirilmiş doğrulama sorusu | CF ara sayfayı tarayıcının dilinde sunar (bir `tr` Chrome'da «Bir dakika lütfen…», 2026-10-21'de ölçüldü) → algılayıcı başlığı değil **panel SPA kökünü** test eder ve Chrome `--lang=en-US` olarak sabitlenir |
+| E-postayla gelen kod | `support@wallabytoken.com` adresinden **~15–25 s** («Wallaby邮箱验证邮件»), 6 karakterli kod, 10 dakika geçerli |
+| `POST /api/user/register?turnstile=` | `data.access_token` (JWT) ile **200**; yalnızca gövdedeki bir token `Turnstile token 为空` yanıtlar |
+| Konsol oturumu | **Bearer JWT** — `/api/user/self` onsuz 401, onunla 200 (`quota = 250000`) |
 | Anahtar rotası | `POST /api/token/` 200 (gövdede anahtar yok) → liste onu **maskelenmiş** döndürür → `POST /api/token/<id>/key` 48 karakterli düz metni döndürür |
 | Anahtar başına `GET /v1/models` | **200** — `kimi-k3`, `moonshotai/kimi-k3` |
-| Anahtar başına `POST /v1/chat/completions` | `content \|\| reasoning_content` ile **200** — **11/11 anahtar CANLI** |
+| Anahtar başına `POST /v1/chat/completions` | `content \|\| reasoning_content` ile **200** — **her anahtar doğrulandı** |
 | Kayıt kredisi | `quota = 250000` = **$0.50**, kart/telefon/davet yok |
 | Hız sınırı | 30 çağrılık patlama **28×200**, 2 proxy hatası, **0×429** |
-| Verim | İyi bir çıkışta **hesap başına ~2–2.5 dk**; kötü bir çıkış atlanır, en kötü durumda ~5 dk |
+| Verim | iyi bir çıkışta **hesap başına ~2–2.5 dk**; kötü bir çıkış atlanır, en kötü durumda ~5 dk |
+
+> **Kalite kapıları.** Buradaki her anahtar `keys.txt` dosyasına yazılmadan önce canlı bir `chat-200` geçti
+> (ölü anahtarlar asla gönderilmez). Yönlendirici kombinasyonları model düzeyinde aynı kuralı izler: bir giriş
+> **yalnızca model `chat-200` yanıtlıyorsa ve araçları çağırabiliyorsa** eklenir — araç desteği olmayan bir model,
+> ölü bir anahtar veya ölü bir sağlayıcı eklenmek yerine çıkarılır. Doğrulama adımını istediğiniz zaman yeniden çalıştırın;
+> hatalar bildirilir, asla gizlenmez.
 
 ## 🧭 Nasıl çalışır
 
@@ -144,14 +150,14 @@ gelen kutusu (hesap başına bir adres)                            hesap başın
 
 | Adım | Çağrı | Notlar |
 | --- | --- | --- |
-| posta kutusu | temp.tf takma adı (`outlook`/`hotmail` artı takma adı) | hesap başına bir adres; panel 9 890 tek kullanımlık alan adını reddeder ve bu aile gerçek bir Microsoft posta kutusudur |
-| ara sayfa | **Headful** Chrome'da `/register` | widget kapalı bir shadow root içinde yaşar, bu yüzden DOM delinir (`DOM.getDocument {pierce:true}`) ve kutu gerçek fare olaylarıyla tıklanır; 4–10 tur |
-| turnstile | panelin kendi widget'ı (`/api/status` içinden `turnstile_sitekey`) | sayfa çözdüğünde yerel olarak okunur (773–794 karakter token'lar), aksi halde aynı ritimde bağlanır ve tıklanır |
+| posta kutusu | temp.tf takma adı (`outlook`/`hotmail` artı-takma adı) | hesap başına bir adres; panel 9 890 tek kullanımlık alan adını reddeder ve bu aile gerçek bir Microsoft posta kutusudur |
+| ara sayfa | **headful** Chrome'da `/register` | widget kapalı bir shadow root içinde yaşar, bu yüzden DOM delinir (`DOM.getDocument {pierce:true}`) ve kutu gerçek fare olaylarıyla tıklanır; 4–10 tur |
+| turnstile | panelin kendi widget'ı (`/api/status`'ten `turnstile_sitekey`) | sayfa çözdüğünde yerel olarak okunur (773–794 karakter token'lar), aksi halde aynı ritimde bağlanır ve tıklanır |
 | kod | `GET /api/verification?email=&turnstile=` → e-postayla gelen kod | token **sorgu dizesinde** taşınmalıdır; yalnızca gövdede olduğunda rota `Turnstile token 为空` yanıtlar |
-| kayıt | `POST /api/user/register?turnstile=` | 6 karakterli bir kod e-postalar (her örnekte hex, 10 dakika geçerli, `support@<panel-mail>` adresinden ~15–25 s içinde teslim edilir) |
-| oturum | register/login'den gelen `data.access_token` JWT'si | konsol **Bearer** ile kimlik doğrular, çerezlerle değil: başlık olmadan `/api/user/self` `401 invalid access token` yanıtlar |
+| kayıt | `POST /api/user/register?turnstile=` | 6 karakterli bir kod e-postalar (her örnekte hex, 10 dakika geçerli, `support@wallabytoken.com` adresinden ~15–25 s içinde teslim edilir) |
+| oturum | kayıt/girişten gelen `data.access_token` JWT | konsol **Bearer** ile kimlik doğrular, çerezlerle değil: `/api/user/self` başlık olmadan `401 invalid access token` yanıtlar |
 | anahtar | `POST /api/token/` → `POST /api/token/<id>/key` | oluşturma **anahtar olmadan** 200 yanıtlar ve liste onu **maskelenmiş** döndürür (`zcMh**********UCAK`); düz metin yalnızca `/key` rotasından gelir |
-| kanıt | `GET /v1/models` + `POST /v1/chat/completions` | doğrudan Node'dan — aktarıcı `/v1/*` isteklerini sorgulamaz; `content || reasoning_content` sayılır |
+| kanıt | `GET /v1/models` + `POST /v1/chat/completions` | doğrudan Node'dan — aktarıcı `/v1/*`'ı sorgulamaz; `content || reasoning_content` sayılır |
 
 ## ⚙️ CLI seçenekleri
 
@@ -171,12 +177,12 @@ node src/cli.js --help
 | `--count N` | `1` | üretilecek hesaplar, her seferinde bir tarayıcı |
 | `--pool FILE` | varsa `proxies.txt` | satır başına bir çıkış (`http://`, `socks5://`); olmadan çalıştırma doğrudandır |
 | `--proxy URL` | — | tek bir çıkışı sabitle |
-| `--exits K` | `8` | bir hesabın vazgeçilmeden önce yakabileceği aday çıkış sayısı |
+| `--exits K` | `8` | bir hesabın vazgeçilmeden önce tüketebileceği aday çıkış sayısı |
 | `--model ID` | `kimi-k3` | canlı kapı için kullanılan model |
 | `--port N` | otomatik | Chrome DevTools bağlantı noktası |
 | `--headless` | kapalı | yalnızca deneyler için: Cloudflare temizlemez |
 | `--keep` | kapalı | çalıştırma bittiğinde Chrome'u açık bırak |
-| `--code-timeout S` | `360` | e-postayla gelen kodu ne kadar bekle |
+| `--code-timeout S` | `360` | e-postayla gelen kodu ne kadar bekleyeceği |
 
 ## 🛰️ Proxy arkasında
 
@@ -190,7 +196,7 @@ Kimlik doğrulamalı proxy'ler tarayıcı ayağı tarafından desteklenmez — I
 
 | Yol | İçerik |
 | --- | --- |
-| `keys.txt` | satır başına canlı olarak kanıtlanmış bir anahtar — git tarafından yok sayılır |
+| `keys.txt` | satır başına canlı kanıtlanmış bir anahtar — git tarafından yok sayılır |
 | `accounts.json` | posta kutusu, çıkış, kota, anahtar ve kapı sonucu — hesap başına eklenir — git tarafından yok sayılır |
 | `proxies.txt` | çıkışlarınız, satır başına bir tane — git tarafından yok sayılır |
 
@@ -213,6 +219,7 @@ node src/connect-omniroute.js --base http://localhost:20128 --password 123456
 ```
 
 Varsayılanlar: `--prefix wallaby`, `--base-url https://api.wallabytoken.com/v1`, `--model kimi-k3`. Modeller `wallaby/kimi-k3` olarak sunulur.
+
 ## 🔑 Bir anahtar size ne kazandırır
 
 | | |
